@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+    <meta charset="UTF-8">
+    <title>
+        <%= profileUser.fullName || profileUser.username %>'s Profile
+    </title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #dde2ea;
+            font-family: 'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, sans-serif;
+            font-size: 13px;
+            color: #000;
+        }
+
+        /* ── TWO-COLUMN MAIN LAYOUT CONTAINER ── */
+        .main-container {
+            display: flex;
+            gap: 25px;
+            max-width: 1150px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* ── ULTIMATE LEFT MENU (Dashed Section) ── */
+        .sidebar-left {
+            width: 200px;
+            flex-shrink: 0;
+        }
+
+        .search-dashed-box {
+            border: 1px dashed #555555;
+            padding: 12px;
+            margin-bottom: 15px;
+            background: #fff;
+        }
+
+        .search-dashed-box input[type="text"] {
+            width: 120px;
+            font-size: 12px;
+            border: 1px solid #7f9db9;
+            padding: 3px;
+        }
+
+        .search-dashed-box button {
+            font-size: 12px;
+            background: #f0f0f0;
+            border: 1px solid #7f9db9;
+            padding: 2px 6px;
+            cursor: pointer;
+        }
+
+        .search-label {
+            font-size: 12px;
+            color: #555;
+            margin-top: 8px;
+            display: inline-block;
+        }
+
+        .nav-links-box {
+            border: 1px dashed #555555;
+            padding: 12px;
+            background: #fff;
+        }
+
+        .nav-links-box ul {
+            list-style: none;
+        }
+
+        .nav-links-box ul li {
+            margin-bottom: 8px;
+        }
+
+        .nav-links-box ul li a {
+            color: #5471b0;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-links-box ul li a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── FACEBOOK PROFILE BOX (Solid Border Wrapper) ── */
+        .profile-container {
+            flex: 1;
+            border: 2px solid #3b5998;
+            background-color: #fff;
+            box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.05);
+        }
+
+        /* ── PROFILE HEADER BAR ── */
+        .profile-topbar {
+            background: #4c66a4;
+            padding: 8px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #3b5998;
+        }
+
+        .profile-topbar .user-title {
+            font-size: 15px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .profile-topbar .network-title {
+            font-size: 13px;
+            color: #fff;
+        }
+
+        /* ── INNER BODY LAYOUT ── */
+        .profile-body {
+            display: flex;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        /* ── COLUMN LEFT (Inside Profile) ── */
+        .col-left {
+            width: 240px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* ── COLUMN RIGHT (Inside Profile) ── */
+        .col-right {
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* ── GENERIC BOX ── */
+        .box {
+            border: 1px solid #3b5998;
+            margin-bottom: 1px;
+        }
+
+        .box-hd {
+            background: #6d84b4;
+            color: #fff;
+            font-weight: bold;
+            font-size: 13px;
+            padding: 5px 10px;
+        }
+
+        .box-bd {
+            padding: 10px;
+            background: #fff;
+        }
+
+        .box-bd p {
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .box-bd p a,
+        a.classic-link {
+            color: #5471b0;
+            text-decoration: none;
+        }
+
+        .box-bd p a:hover,
+        a.classic-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ── PICTURE ── */
+        .pic-wrap {
+            width: 100%;
+            border: 1px solid #bcbcbc;
+            background: #f7f7f7;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px;
+        }
+
+        .pic-wrap img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .pic-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            color: #8c8c8c;
+            padding: 35px 0;
+        }
+
+        /* Buttons Box below image */
+        .action-buttons-box {
+            border: 1px solid #bcbcbc;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .action-link {
+            display: block;
+            border-bottom: 1px solid #bcbcbc;
+            color: #5471b0;
+            padding: 8px 10px;
+            text-decoration: none;
+            font-size: 13px;
+            background: #fff;
+        }
+
+        .action-link:last-child {
+            border-bottom: none;
+        }
+
+        .action-link:hover {
+            background: #f7f7f7;
+            text-decoration: underline;
+        }
+
+        /* Form upload wrapper */
+        .upload-strip {
+            padding: 8px;
+            border-top: 1px dashed #bcbcbc;
+            background: #fbfbfb;
+        }
+
+        .upload-strip input[type="file"] {
+            font-size: 11px;
+            width: 100%;
+            margin-bottom: 5px;
+        }
+
+        .btn-upload {
+            background: #f0f0f0;
+            border: 1px solid #7f9db9;
+            padding: 3px 8px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        /* ── INFORMATION SECTION (right col) ── */
+        .info-container {
+            border: 1px solid #3b5998;
+        }
+
+        .info-box-hd {
+            background: #6d84b4;
+            color: #fff;
+            font-weight: bold;
+            font-size: 13px;
+            padding: 5px 12px;
+        }
+
+        .info-section {
+            padding: 15px;
+        }
+
+        .info-section-title {
+            font-weight: bold;
+            font-size: 13px;
+            color: #000;
+            margin-bottom: 6px;
+        }
+
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 12px;
+        }
+
+        .info-table td {
+            padding: 3px 5px 3px 0;
+            vertical-align: top;
+            font-size: 13px;
+        }
+
+        .info-table .lbl {
+            color: #000;
+            width: 150px;
+            /* Wider column row indicators */
+            white-space: nowrap;
+        }
+
+        .info-table .val {
+            color: #000;
+        }
+
+        .info-table .val.blue-text,
+        .info-table .val a {
+            color: #5471b0;
+            text-decoration: none;
+        }
+
+        .info-table .val a:hover {
+            text-decoration: underline;
+        }
+
+        .info-divider {
+            border: none;
+            border-top: 1px dashed #6d84b4;
+            margin: 10px 0 15px 0;
+        }
+
+        /* ── FRIENDS GRID ── */
+        .friends-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            padding: 10px 5px;
+        }
+
+        .f-thumb {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .f-thumb img {
+            width: 65px;
+            height: 65px;
+            object-fit: cover;
+            border: 1px solid #bcbcbc;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .f-thumb-ph {
+            width: 65px;
+            height: 65px;
+            background: #e0e4f0;
+            border: 1px solid #bcbcbc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 4px;
+        }
+
+        .f-name {
+            font-size: 11px;
+            color: #5471b0;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        em.none {
+            color: #777;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+
+    <%- include('../partials/nav') %>
+
+        <div class="main-container">
+
+            <div class="sidebar-left">
+                <div class="search-dashed-box">
+                    <input type="text" value="">
+                    <button type="button">go</button>
+                    <br>
+                    <span class="search-label">quick search</span>
+                </div>
+
+                <div class="nav-links-box">
+                    <ul>
+                        <li><a href="#">My Profile [ edit ]</a></li>
+                        <li><a href="#">My Friends</a></li>
+                        <li><a href="#">My Groups</a></li>
+                        <li><a href="#">My Parties</a></li>
+                        <li><a href="#">My Messages</a></li>
+                        <li><a href="#">My Account</a></li>
+                        <li><a href="#">My Privacy</a></li>
+                    </ul>
+                </div>
+            </div>
+
+
+            <div class="profile-container">
+
+                <div class="profile-topbar">
+                    <span class="user-title">
+                        <%= profileUser.fullName || profileUser.username %>'s Profile
+                    </span>
+                    <span class="network-title">
+                        <%= profileUser.college || 'Puget Sound' %>
+                    </span>
+                </div>
+
+                <div class="profile-body">
+
+                    <div class="col-left">
+
+                        <div class="box">
+                            <div class="box-hd">Picture</div>
+                            <div class="box-bd">
+                                <div class="pic-wrap">
+                                    <% if (profileUser.avatar) { %>
+                                        <img src="<%= profileUser.avatar %>" alt="<%= profileUser.username %>">
+                                        <% } else { %>
+                                            <div class="pic-empty">
+                                                <span>No photo</span>
+                                            </div>
+                                            <% } %>
+                                </div>
+                            </div>
+
+                            <div class="action-buttons-box">
+                                <a href="#" class="action-link">Send <%= profileUser.username %> a Message</a>
+                                <a href="#" class="action-link">Poke Him!</a>
+                            </div>
+
+                            <form action="/profile/avatar" method="POST" enctype="multipart/form-data"
+                                class="upload-strip">
+                                <input type="file" name="avatar" accept="image/*">
+                                <button type="submit" class="btn-upload">Upload Photo</button>
+                            </form>
+                        </div>
+
+                        <div class="box">
+                            <div class="box-hd">Connection</div>
+                            <div class="box-bd">
+                                <% if (profileUser.relationshipStatus && profileUser.relationshipStatus.trim()) { %>
+                                    <p>You are in a relationship with <%= profileUser.username %>.</p>
+                                    <% } else { %>
+                                        <p><em class="none">Not specified.</em></p>
+                                        <% } %>
+                            </div>
+                        </div>
+
+                        <div class="box">
+                            <div class="box-hd">Mutual Friends</div>
+                            <div class="box-bd">
+                                <% if (profileUser.friends && profileUser.friends.length> 0) { %>
+                                    <p>You have <a href="#friends-list">
+                                            <%= profileUser.friends.length %> friends
+                                        </a> in common with <%= profileUser.username %>.</p>
+                                    <% } else { %>
+                                        <p>You have 0 friends in common.</p>
+                                        <% } %>
+                            </div>
+                        </div>
+
+                        <div class="box">
+                            <div class="box-hd">Access</div>
+                            <div class="box-bd">
+                                <p>
+                                    <%= profileUser.username %> is currently logged in from a non-residential location.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="box" id="friends-list">
+                            <div class="box-hd">Friends at <%= profileUser.college || 'Puget Sound' %>
+                            </div>
+                            <div class="box-bd">
+                                <% if (profileUser.friends && profileUser.friends.length> 0) { %>
+                                    <div class="friends-grid">
+                                        <% profileUser.friends.forEach(function(friend) { %>
+                                            <div class="f-thumb">
+                                                <% if (friend.avatar) { %>
+                                                    <img src="<%= friend.avatar %>" alt="<%= friend.username %>">
+                                                    <% } else { %>
+                                                        <div class="f-thumb-ph"></div>
+                                                        <% } %>
+                                                            <span class="f-name">
+                                                                <%= friend.username %>
+                                                            </span>
+                                            </div>
+                                            <% }) %>
+                                    </div>
+                                    <% } else { %>
+                                        <p><em class="none">No friends yet.</em></p>
+                                        <% } %>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-right">
+                        <div class="info-container">
+                            <div class="info-box-hd">Information</div>
+
+                            <div class="info-section">
+
+                                <p class="info-section-title">Account Info:</p>
+                                <table class="info-table">
+                                    <tr>
+                                        <td class="lbl">Name:</td>
+                                        <td class="val">
+                                            <%= profileUser.fullName || profileUser.username %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lbl">Member Since:</td>
+                                        <td class="val">
+                                            <%= new Date(profileUser.createdAt).toLocaleDateString('en-US', {
+                                                month:'long', day:'numeric', year:'numeric' }) %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lbl">Last Update:</td>
+                                        <td class="val">
+                                            <%= new Date(profileUser.updatedAt).toLocaleDateString('en-US', {
+                                                month:'long', day:'numeric', year:'numeric' }) %>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <hr class="info-divider">
+
+                                <p class="info-section-title">Basic Info:</p>
+                                <table class="info-table">
+                                    <tr>
+                                        <td class="lbl">School:</td>
+                                        <td class="val blue-text">
+                                            <%= profileUser.college || 'Puget Sound \' 09' %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lbl">Status:</td>
+                                        <td class="val">
+                                            <%= profileUser.status || 'Student' %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lbl">Sex:</td>
+                                        <td class="val blue-text">
+                                            <%= profileUser.sex || 'Male' %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lbl">Residence:</td>
+                                        <td class="val">
+                                            <%= profileUser.residence || 'Todd 311' %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lbl">Birthday:</td>
+                                        <td class="val blue-text">
+                                            <%= profileUser.birthday || '09/02/1986' %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lbl">Home Town:</td>
+                                        <td class="val blue-text">
+                                            <%= profileUser.hometown || 'Shorewood, WI' %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lbl">High School:</td>
+                                        <td class="val blue-text">
+                                            <%= profileUser.highSchool || 'Shorewood Hi \' 05' %>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <hr class="info-divider">
+
+                                <p class="info-section-title">Contact Info:</p>
+                                <table class="info-table">
+                                    <tr>
+                                        <td class="lbl">Email:</td>
+                                        <td class="val blue-text">
+                                            <%= profileUser.email %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lbl">Screenname:</td>
+                                        <td class="val blue-text">
+                                            <%= profileUser.screenname || 'DoctaBu' %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lbl">Mobile:</td>
+                                        <td class="val">
+                                            <%= profileUser.mobile || '414.702.7426' %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lbl">Websites:</td>
+                                        <td class="val">
+                                            <% if (profileUser.websites && profileUser.websites.trim()) { %>
+                                                <% profileUser.websites.split('\n').forEach(function(site) {
+                                                    site=site.trim(); if (site) { %>
+                                                    <a href="<%= site %>" target="_blank">
+                                                        <%= site %>
+                                                    </a><br>
+                                                    <% } }) %>
+                                                        <% } else { %>
+                                                            <a href="#">http://www.doctabu.com</a>
+                                                            <% } %>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <hr class="info-divider">
+
+                                <p class="info-section-title">Personal Info:</p>
+                                <table class="info-table">
+                                    <tr>
+                                        <td class="lbl">Looking For:</td>
+                                        <td class="val blue-text">
+                                            <%= profileUser.lookingFor || 'Friendship' %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lbl">Interested In:</td>
+                                        <td class="val blue-text">
+                                            <%= profileUser.interestedIn || 'Women' %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lbl">Relationship Status:</td>
+                                        <td class="val blue-text">
+                                            <%= profileUser.relationshipStatus || 'In a Relationship' %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lbl">Political Views:</td>
+                                        <td class="val blue-text">
+                                            <%= profileUser.politicalViews || 'Very Liberal' %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lbl">Interests:</td>
+                                        <td class="val blue-text">
+                                            <%= profileUser.interests || 'Film, Graphic Design, Video Editing' %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lbl">Favorite Music:</td>
+                                        <td class="val blue-text">
+                                            <%= profileUser.favoriteMusic || 'The Beatles, OutKast, U2' %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lbl">Favorite Movies:</td>
+                                        <td class="val blue-text">
+                                            <%= profileUser.favoriteMovies || 'Office Space, Garden State' %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="lbl">About Me:</td>
+                                        <td class="val">
+                                            <% if (profileUser.bio && profileUser.bio.trim()) { %>
+                                                <%= profileUser.bio %>
+                                                    <% } else { %>
+                                                        What is there to say? I dunno. I am a creative person who likes
+                                                        making movies and stuff.
+                                                        <% } %>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+
+</html>

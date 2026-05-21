@@ -1,0 +1,90 @@
+<nav class="site-nav">
+  <div class="nav-decoration">
+    <span>01 1000</span><span> 0011</span><span>10 0101</span>
+    <span> 11001</span><span>0 1110</span><span> 01011</span>
+  </div>
+  <div class="nav-brand">
+    <img src="/logo.svg" alt="thefacebook" class="nav-logo" />
+    <div class="nav-links">
+      <a href="/login">login</a>
+      <a href="/register">register</a>
+      <a href="/about">about</a>
+    </div>
+  </div>
+</nav>
+
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Arial, sans-serif;
+    background: #dde2ea;
+    min-height: 100vh;
+  }
+
+  .site-nav {
+    width: 100%;
+    height: 100px;
+    background: linear-gradient(to right, #C2CFDD 0%, #C2CFDD 22%, #4a6aad 40%, #3B5998 55%, #3B5998 100%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+    padding: 0 16px;
+  }
+
+  .nav-decoration {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding-left: 8px;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .nav-decoration span {
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    color: rgba(59, 89, 152, 0.4);
+    letter-spacing: 2px;
+  }
+
+  .nav-brand {
+    position: absolute;
+    left: 68%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .nav-logo {
+    height: 72px;
+    width: auto;
+    display: block;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 16px;
+  }
+
+  .nav-links a {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    font-size: 12px;
+    text-transform: lowercase;
+  }
+
+  .nav-links a:hover {
+    color: #fff;
+    text-decoration: underline;
+  }
+</style>

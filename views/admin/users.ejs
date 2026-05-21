@@ -1,41 +1,29 @@
+<%- include('../partials/header', { title: 'správa uživatelů' }) %>
+
 <% if (locals.dbError) { %>
-    <div style="background-color: #ffcccc; color: #990000; padding: 10px; border: 1px solid #990000; border-radius: 4px; margin-bottom: 20px; font-family: sans-serif;">
-        <strong>⚠️ Databáze není připojena:</strong> Uživatele nelze spravovat.
-    </div>
+  <div style="background-color: #ffcccc; color: #990000; padding: 10px; border: 1px solid #990000; border-radius: 4px; margin-bottom: 20px;">
+    <strong>⚠️ Databáze není připojena:</strong> Uživatele nelze spravovat.
+  </div>
 <% } %>
 
-<h1>Správa uživatelů</h1> 
- 
-<% users.forEach(oneUser => { %> 
- 
-<div> 
- 
-  <p> 
-    <strong><%= oneUser.username %></strong> 
-    - role: <%= oneUser.role %> 
-  </p> 
- 
-  <form action="/admin/users/<%= oneUser._id %>/role" method="POST"> 
- 
-    <select name="role"> 
- 
-      <option value="user" 
-        <%= oneUser.role === "user" ? "selected" : "" %>> 
-        user 
-      </option> 
- 
-      <option value="admin" 
-        <%= oneUser.role === "admin" ? "selected" : "" %>> 
-        admin 
-      </option> 
- 
-    </select> 
- 
-    <button type="submit">Změnit roli</button> 
- 
-  </form> 
- 
-</div> 
-<hr> 
- 
-<% }) %> 
+<h1>Správa uživatelů</h1>
+
+<% users.forEach(oneUser => { %>
+<div>
+  <p>
+    <strong><%= oneUser.username %></strong>
+    - role: <%= oneUser.role %>
+  </p>
+
+  <form action="/admin/users/<%= oneUser._id %>/role" method="POST">
+    <select name="role">
+      <option value="user" <%= oneUser.role === "user" ? "selected" : "" %>>user</option>
+      <option value="admin" <%= oneUser.role === "admin" ? "selected" : "" %>>admin</option>
+    </select>
+    <button type="submit">Změnit roli</button>
+  </form>
+</div>
+<hr>
+<% }) %>
+
+<%- include('../partials/footer') %>

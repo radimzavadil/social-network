@@ -1,0 +1,77 @@
+<%- include('partials/header', { title: 'thefacebook' }) %>
+
+  <div style="max-width:1000px; margin:0 auto; padding:30px 20px 0;">
+
+    <div style="display:flex; align-items:flex-start; gap:0;">
+
+      <!-- LOGIN BOX -->
+      <div style="width:280px; flex-shrink:0; border:2px dashed #8899bb; background:#f0f2f7; padding:24px 20px;">
+        <form action="/login" method="POST">
+
+          <div style="display:flex; flex-direction:column; align-items:flex-end; margin-bottom:14px;">
+            <label style="font-size:14px; margin-bottom:4px;">Username:</label>
+            <input type="text" name="username" required
+              style="width:160px; height:26px; background:#DADDE5; border:1px solid #000; font-size:13px; padding:3px 7px;" />
+          </div>
+
+          <div style="display:flex; flex-direction:column; align-items:flex-end; margin-bottom:18px;">
+            <label style="font-size:14px; margin-bottom:4px;">Password:</label>
+            <input type="password" name="password" required
+              style="width:160px; height:26px; background:#DADDE5; border:1px solid #000; font-size:13px; padding:3px 7px;" />
+          </div>
+
+          <div style="display:flex; gap:10px; justify-content:flex-end;">
+            <button type="submit"
+              style="background:#5F8ACF; color:#fff; border:1px solid #3a6ab0; font-size:14px; padding:7px 20px; cursor:pointer;">
+              login
+            </button>
+            <a href="/register"
+              style="background:#5F8ACF; color:#fff; border:1px solid #3a6ab0; font-size:14px; padding:7px 20px; text-decoration:none; display:inline-block;">
+              register
+            </a>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- WELCOME BOX -->
+      <div style="flex:1; border:1px solid #000; background:#fff;">
+        <div style="background:#3C5B95; color:#fff; font-size:15px; font-weight:bold; padding:10px 18px;">
+          Welcome to Thefacebook!
+        </div>
+        <div style="padding:36px 40px; font-size:15px; line-height:2;">
+          <h2
+            style="font-size:22px; font-weight:bold; text-align:center; margin-bottom:26px; font-family:'Courier New',monospace;">
+            [ Welcome to Thefacebook ]
+          </h2>
+          <p style="margin-bottom:18px;">
+            Thefacebook je školní projekt do PWS, inspirovaný první verzí Facebooku z roku 2004.
+          </p>
+          <p style="margin-bottom:18px;">
+            Je to online adresář, který propojuje lidi na stejné škole prostřednictvím přátelských sítí.
+          </p>
+          <p style="margin-bottom:12px;"><strong>Na Thefacebook můžeš:</strong></p>
+          <ul style="margin:0 0 18px 24px; line-height:2.4;">
+            <li>Vytvořit si vlastní profil s fotkou a bio</li>
+            <li>Vyhledávat lidi ze své školy</li>
+            <li>Posílat a přijímat žádosti o přátelství</li>
+            <li>Psát zprávy přátelům</li>
+          </ul>
+          <p>
+            Pro začátek se zaregistruj. Pokud už máš účet, přihlas se.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div style="text-align:center; padding:90px 0 50px; font-size:14px; color:#555; line-height:2.8;">
+      <div>about &nbsp;&nbsp; contact &nbsp;&nbsp; terms &nbsp;&nbsp; privacy</div>
+      <div>a Radim Zavadil production</div>
+      <div>Thefacebook &copy; 2026</div>
+    </div>
+
+  </div>
+
+  <%- include('partials/footer') %>
