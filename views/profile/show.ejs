@@ -42,7 +42,7 @@
             background: #fff;
         }
 
-        .search-dashed-box input[type="text"] {
+        .search-dashed-box input[type=\"text\"] {
             width: 120px;
             font-size: 12px;
             border: 1px solid #7f9db9;
@@ -259,6 +259,20 @@
             font-weight: bold;
             font-size: 13px;
             padding: 5px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .info-box-hd a.edit-link {
+            color: #fff;
+            font-size: 11px;
+            text-decoration: none;
+            font-weight: normal;
+        }
+
+        .info-box-hd a.edit-link:hover {
+            text-decoration: underline;
         }
 
         .info-section {
@@ -287,7 +301,6 @@
         .info-table .lbl {
             color: #000;
             width: 150px;
-            /* Wider column row indicators */
             white-space: nowrap;
         }
 
@@ -352,323 +365,475 @@
             line-height: 1.2;
         }
 
+        /* Setup style rules for placeholders */
         em.none {
             color: #777;
             font-style: italic;
+        }
+
+        /* Light grey styling for prompts */
+        a.prompt-edit {
+            color: #94a3b8 !important;
+            font-style: italic;
+            text-decoration: none;
+        }
+
+        a.prompt-edit:hover {
+            text-decoration: underline !important;
+            color: #64748b !important;
         }
     </style>
 </head>
 
 <body>
 
-    <%- include('../partials/nav') %>
+    <% let isOwnProfile=false; if (typeof user !=='undefined' && user && typeof profileUser !=='undefined' &&
+        profileUser) { if (user._id && profileUser._id) {
+        isOwnProfile=(user._id.toString()===profileUser._id.toString()); } } %>
 
-        <div class="main-container">
+        <%- include('../partials/nav') %>
 
-            <div class="sidebar-left">
-                <div class="search-dashed-box">
-                    <input type="text" value="">
-                    <button type="button">go</button>
-                    <br>
-                    <span class="search-label">quick search</span>
+            <div class="main-container">
+
+                <div class="sidebar-left">
+                    <div class="search-dashed-box">
+                        <input type="text" value="">
+                        <button type="button">go</button>
+                        <br>
+                        <span class="search-label">quick search</span>
+                    </div>
+
+                    <div class="nav-links-box">
+                        <ul>
+                            <li><a href="/profile/edit">My Profile [ edit ]</a></li>
+                            <li><a href="#">My Friends</a></li>
+                            <li><a href="#">My Groups</a></li>
+                            <li><a href="#">My Parties</a></li>
+                            <li><a href="#">My Messages</a></li>
+                            <li><a href="#">My Account</a></li>
+                            <li><a href="#">My Privacy</a></li>
+                        </ul>
+                    </div>
                 </div>
 
-                <div class="nav-links-box">
-                    <ul>
-                        <li><a href="#">My Profile [ edit ]</a></li>
-                        <li><a href="#">My Friends</a></li>
-                        <li><a href="#">My Groups</a></li>
-                        <li><a href="#">My Parties</a></li>
-                        <li><a href="#">My Messages</a></li>
-                        <li><a href="#">My Account</a></li>
-                        <li><a href="#">My Privacy</a></li>
-                    </ul>
-                </div>
-            </div>
 
+                <div class="profile-container">
 
-            <div class="profile-container">
-
-                <div class="profile-topbar">
-                    <span class="user-title">
-                        <%= profileUser.fullName || profileUser.username %>'s Profile
-                    </span>
-                    <span class="network-title">
-                        <%= profileUser.college || 'Puget Sound' %>
-                    </span>
-                </div>
-
-                <div class="profile-body">
-
-                    <div class="col-left">
-
-                        <div class="box">
-                            <div class="box-hd">Picture</div>
-                            <div class="box-bd">
-                                <div class="pic-wrap">
-                                    <% if (profileUser.avatar) { %>
-                                        <img src="<%= profileUser.avatar %>" alt="<%= profileUser.username %>">
+                    <div class="profile-topbar">
+                        <span class="user-title">
+                            <%= profileUser.fullName || profileUser.username %>'s Profile
+                        </span>
+                        <span class="network-title">
+                            <% if (profileUser.college && profileUser.college.trim()) { %>
+                                <%= profileUser.college %>
+                                    <% } else if (isOwnProfile) { %>
+                                        Zadejte školu v nastavení
                                         <% } else { %>
-                                            <div class="pic-empty">
-                                                <span>No photo</span>
-                                            </div>
+                                            Nezadáno
+                                            <% } %>
+                        </span>
+                    </div>
+
+                    <div class="profile-body">
+
+                        <div class="col-left">
+
+                            <div class="box">
+                                <div class="box-hd">Picture</div>
+                                <div class="box-bd">
+                                    <div class="pic-wrap">
+                                        <% if (profileUser.avatar) { %>
+                                            <img src="<%= profileUser.avatar %>" alt="<%= profileUser.username %>">
+                                            <% } else { %>
+                                                <div class="pic-empty">
+                                                    <span>No photo</span>
+                                                </div>
+                                                <% } %>
+                                    </div>
+                                </div>
+
+                                <div class="action-buttons-box">
+                                    <a href="#" class="action-link">Send <%= profileUser.username %> a Message</a>
+                                    <a href="#" class="action-link">Poke Him!</a>
+                                </div>
+
+                                <% if (isOwnProfile) { %>
+                                    <form action="/profile/edit" method="POST" enctype="multipart/form-data"
+                                        class="upload-strip">
+                                        <input type="file" name="avatar" accept="image/*">
+                                        <button type="submit" class="btn-upload">Upload Photo</button>
+                                    </form>
+                                    <% } %>
+                            </div>
+
+                            <div class="box">
+                                <div class="box-hd">Connection</div>
+                                <div class="box-bd">
+                                    <% if (profileUser.relationshipStatus && profileUser.relationshipStatus.trim()) { %>
+                                        <p>You are in a relationship with <%= profileUser.username %>.</p>
+                                        <% } else { %>
+                                            <p><em class="none">Not specified.</em></p>
                                             <% } %>
                                 </div>
                             </div>
 
-                            <div class="action-buttons-box">
-                                <a href="#" class="action-link">Send <%= profileUser.username %> a Message</a>
-                                <a href="#" class="action-link">Poke Him!</a>
+                            <div class="box">
+                                <div class="box-hd">Mutual Friends</div>
+                                <div class="box-bd">
+                                    <% if (profileUser.friends && profileUser.friends.length> 0) { %>
+                                        <p>You have <a href="#friends-list">
+                                                <%= profileUser.friends.length %> friends
+                                            </a> in common with <%= profileUser.username %>.</p>
+                                        <% } else { %>
+                                            <p>You have 0 friends in common.</p>
+                                            <% } %>
+                                </div>
                             </div>
 
-                            <form action="/profile/avatar" method="POST" enctype="multipart/form-data"
-                                class="upload-strip">
-                                <input type="file" name="avatar" accept="image/*">
-                                <button type="submit" class="btn-upload">Upload Photo</button>
-                            </form>
-                        </div>
-
-                        <div class="box">
-                            <div class="box-hd">Connection</div>
-                            <div class="box-bd">
-                                <% if (profileUser.relationshipStatus && profileUser.relationshipStatus.trim()) { %>
-                                    <p>You are in a relationship with <%= profileUser.username %>.</p>
-                                    <% } else { %>
-                                        <p><em class="none">Not specified.</em></p>
-                                        <% } %>
+                            <div class="box">
+                                <div class="box-hd">Access</div>
+                                <div class="box-bd">
+                                    <p>
+                                        <%= profileUser.username %> is currently logged in from a <%=
+                                                profileUser.accessLocation || 'non-residential location' %>.
+                                    </p>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="box">
-                            <div class="box-hd">Mutual Friends</div>
-                            <div class="box-bd">
-                                <% if (profileUser.friends && profileUser.friends.length> 0) { %>
-                                    <p>You have <a href="#friends-list">
-                                            <%= profileUser.friends.length %> friends
-                                        </a> in common with <%= profileUser.username %>.</p>
-                                    <% } else { %>
-                                        <p>You have 0 friends in common.</p>
-                                        <% } %>
-                            </div>
-                        </div>
-
-                        <div class="box">
-                            <div class="box-hd">Access</div>
-                            <div class="box-bd">
-                                <p>
-                                    <%= profileUser.username %> is currently logged in from a non-residential location.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="box" id="friends-list">
-                            <div class="box-hd">Friends at <%= profileUser.college || 'Puget Sound' %>
-                            </div>
-                            <div class="box-bd">
-                                <% if (profileUser.friends && profileUser.friends.length> 0) { %>
-                                    <div class="friends-grid">
-                                        <% profileUser.friends.forEach(function(friend) { %>
-                                            <div class="f-thumb">
-                                                <% if (friend.avatar) { %>
-                                                    <img src="<%= friend.avatar %>" alt="<%= friend.username %>">
-                                                    <% } else { %>
-                                                        <div class="f-thumb-ph"></div>
-                                                        <% } %>
-                                                            <span class="f-name">
-                                                                <%= friend.username %>
-                                                            </span>
-                                            </div>
-                                            <% }) %>
-                                    </div>
-                                    <% } else { %>
-                                        <p><em class="none">No friends yet.</em></p>
-                                        <% } %>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="col-right">
-                        <div class="info-container">
-                            <div class="info-box-hd">Information</div>
-
-                            <div class="info-section">
-
-                                <p class="info-section-title">Account Info:</p>
-                                <table class="info-table">
-                                    <tr>
-                                        <td class="lbl">Name:</td>
-                                        <td class="val">
-                                            <%= profileUser.fullName || profileUser.username %>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="lbl">Member Since:</td>
-                                        <td class="val">
-                                            <%= new Date(profileUser.createdAt).toLocaleDateString('en-US', {
-                                                month:'long', day:'numeric', year:'numeric' }) %>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="lbl">Last Update:</td>
-                                        <td class="val">
-                                            <%= new Date(profileUser.updatedAt).toLocaleDateString('en-US', {
-                                                month:'long', day:'numeric', year:'numeric' }) %>
-                                        </td>
-                                    </tr>
-                                </table>
-
-                                <hr class="info-divider">
-
-                                <p class="info-section-title">Basic Info:</p>
-                                <table class="info-table">
-                                    <tr>
-                                        <td class="lbl">School:</td>
-                                        <td class="val blue-text">
-                                            <%= profileUser.college || 'Puget Sound \' 09' %>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="lbl">Status:</td>
-                                        <td class="val">
-                                            <%= profileUser.status || 'Student' %>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="lbl">Sex:</td>
-                                        <td class="val blue-text">
-                                            <%= profileUser.sex || 'Male' %>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="lbl">Residence:</td>
-                                        <td class="val">
-                                            <%= profileUser.residence || 'Todd 311' %>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="lbl">Birthday:</td>
-                                        <td class="val blue-text">
-                                            <%= profileUser.birthday || '09/02/1986' %>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="lbl">Home Town:</td>
-                                        <td class="val blue-text">
-                                            <%= profileUser.hometown || 'Shorewood, WI' %>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="lbl">High School:</td>
-                                        <td class="val blue-text">
-                                            <%= profileUser.highSchool || 'Shorewood Hi \' 05' %>
-                                        </td>
-                                    </tr>
-                                </table>
-
-                                <hr class="info-divider">
-
-                                <p class="info-section-title">Contact Info:</p>
-                                <table class="info-table">
-                                    <tr>
-                                        <td class="lbl">Email:</td>
-                                        <td class="val blue-text">
-                                            <%= profileUser.email %>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="lbl">Screenname:</td>
-                                        <td class="val blue-text">
-                                            <%= profileUser.screenname || 'DoctaBu' %>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="lbl">Mobile:</td>
-                                        <td class="val">
-                                            <%= profileUser.mobile || '414.702.7426' %>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="lbl">Websites:</td>
-                                        <td class="val">
-                                            <% if (profileUser.websites && profileUser.websites.trim()) { %>
-                                                <% profileUser.websites.split('\n').forEach(function(site) {
-                                                    site=site.trim(); if (site) { %>
-                                                    <a href="<%= site %>" target="_blank">
-                                                        <%= site %>
-                                                    </a><br>
-                                                    <% } }) %>
+                            <div class="box" id="friends-list">
+                                <div class="box-hd">Friends at <%= profileUser.college || 'School' %>
+                                </div>
+                                <div class="box-bd">
+                                    <% if (profileUser.friends && profileUser.friends.length> 0) { %>
+                                        <div class="friends-grid">
+                                            <% profileUser.friends.forEach(function(friend) { %>
+                                                <div class="f-thumb">
+                                                    <% if (friend.avatar) { %>
+                                                        <img src="<%= friend.avatar %>" alt="<%= friend.username %>">
                                                         <% } else { %>
-                                                            <a href="#">http://www.doctabu.com</a>
+                                                            <div class="f-thumb-ph"></div>
                                                             <% } %>
-                                        </td>
-                                    </tr>
-                                </table>
+                                                                <span class="f-name">
+                                                                    <%= friend.username %>
+                                                                </span>
+                                                </div>
+                                                <% }) %>
+                                        </div>
+                                        <% } else { %>
+                                            <p><em class="none">No friends yet.</em></p>
+                                            <% } %>
+                                </div>
+                            </div>
 
-                                <hr class="info-divider">
+                        </div>
+                        <div class="col-right">
+                            <div class="info-container">
+                                <div class="info-box-hd">
+                                    <span>Information</span>
+                                    <% if (isOwnProfile) { %>
+                                        <a href="/profile/edit" class="edit-link">[ edit ]</a>
+                                        <% } %>
+                                </div>
 
-                                <p class="info-section-title">Personal Info:</p>
-                                <table class="info-table">
-                                    <tr>
-                                        <td class="lbl">Looking For:</td>
-                                        <td class="val blue-text">
-                                            <%= profileUser.lookingFor || 'Friendship' %>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="lbl">Interested In:</td>
-                                        <td class="val blue-text">
-                                            <%= profileUser.interestedIn || 'Women' %>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="lbl">Relationship Status:</td>
-                                        <td class="val blue-text">
-                                            <%= profileUser.relationshipStatus || 'In a Relationship' %>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="lbl">Political Views:</td>
-                                        <td class="val blue-text">
-                                            <%= profileUser.politicalViews || 'Very Liberal' %>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="lbl">Interests:</td>
-                                        <td class="val blue-text">
-                                            <%= profileUser.interests || 'Film, Graphic Design, Video Editing' %>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="lbl">Favorite Music:</td>
-                                        <td class="val blue-text">
-                                            <%= profileUser.favoriteMusic || 'The Beatles, OutKast, U2' %>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="lbl">Favorite Movies:</td>
-                                        <td class="val blue-text">
-                                            <%= profileUser.favoriteMovies || 'Office Space, Garden State' %>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="lbl">About Me:</td>
-                                        <td class="val">
-                                            <% if (profileUser.bio && profileUser.bio.trim()) { %>
-                                                <%= profileUser.bio %>
-                                                    <% } else { %>
-                                                        What is there to say? I dunno. I am a creative person who likes
-                                                        making movies and stuff.
-                                                        <% } %>
-                                        </td>
-                                    </tr>
-                                </table>
+                                <div class="info-section">
 
+                                    <p class="info-section-title">Account Info:</p>
+                                    <table class="info-table">
+                                        <tr>
+                                            <td class="lbl">Name:</td>
+                                            <td class="val">
+                                                <%= profileUser.fullName || profileUser.username %>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="lbl">Member Since:</td>
+                                            <td class="val">
+                                                <%= new Date(profileUser.createdAt).toLocaleDateString('en-US', {
+                                                    month:'long', day:'numeric', year:'numeric' }) %>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="lbl">Last Update:</td>
+                                            <td class="val">
+                                                <%= new Date(profileUser.updatedAt).toLocaleDateString('en-US', {
+                                                    month:'long', day:'numeric', year:'numeric' }) %>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                    <hr class="info-divider">
+
+                                    <p class="info-section-title">Basic Info:</p>
+                                    <table class="info-table">
+                                        <tr>
+                                            <td class="lbl">School:</td>
+                                            <td class="val blue-text">
+                                                <% if (profileUser.college && profileUser.college.trim()) { %>
+                                                    <%= profileUser.college %>
+                                                        <% } else if (isOwnProfile) { %>
+                                                            <a href="/profile/edit" class="prompt-edit">[ upravit školu
+                                                                ]</a>
+                                                            <% } else { %>
+                                                                <em class="none">Nezadáno</em>
+                                                                <% } %>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="lbl">Status:</td>
+                                            <td class="val">
+                                                <% if (profileUser.status && profileUser.status.trim()) { %>
+                                                    <%= profileUser.status %>
+                                                        <% } else if (isOwnProfile) { %>
+                                                            <a href="/profile/edit" class="prompt-edit">[ upravit status
+                                                                ]</a>
+                                                            <% } else { %>
+                                                                <em class="none">Nezadáno</em>
+                                                                <% } %>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="lbl">Sex:</td>
+                                            <td class="val blue-text">
+                                                <% if (profileUser.sex && profileUser.sex.trim()) { %>
+                                                    <%= profileUser.sex %>
+                                                        <% } else if (isOwnProfile) { %>
+                                                            <a href="/profile/edit" class="prompt-edit">[ upravit
+                                                                pohlaví ]</a>
+                                                            <% } else { %>
+                                                                <em class="none">Nezadáno</em>
+                                                                <% } %>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="lbl">Residence:</td>
+                                            <td class="val">
+                                                <% if (profileUser.residence && profileUser.residence.trim()) { %>
+                                                    <%= profileUser.residence %>
+                                                        <% } else if (isOwnProfile) { %>
+                                                            <a href="/profile/edit" class="prompt-edit">[ upravit
+                                                                kolej/bydliště ]</a>
+                                                            <% } else { %>
+                                                                <em class="none">Nezadáno</em>
+                                                                <% } %>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="lbl">Birthday:</td>
+                                            <td class="val blue-text">
+                                                <% if (profileUser.birthday && profileUser.birthday.trim()) { %>
+                                                    <%= profileUser.birthday %>
+                                                        <% } else if (isOwnProfile) { %>
+                                                            <a href="/profile/edit" class="prompt-edit">[ upravit datum
+                                                                narození ]</a>
+                                                            <% } else { %>
+                                                                <em class="none">Nezadáno</em>
+                                                                <% } %>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="lbl">Home Town:</td>
+                                            <td class="val blue-text">
+                                                <% if (profileUser.hometown && profileUser.hometown.trim()) { %>
+                                                    <%= profileUser.hometown %>
+                                                        <% } else if (isOwnProfile) { %>
+                                                            <a href="/profile/edit" class="prompt-edit">[ upravit rodné
+                                                                město ]</a>
+                                                            <% } else { %>
+                                                                <em class="none">Nezadáno</em>
+                                                                <% } %>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="lbl">High School:</td>
+                                            <td class="val blue-text">
+                                                <% if (profileUser.highSchool && profileUser.highSchool.trim()) { %>
+                                                    <%= profileUser.highSchool %>
+                                                        <% } else if (isOwnProfile) { %>
+                                                            <a href="/profile/edit" class="prompt-edit">[ upravit
+                                                                střední školu ]</a>
+                                                            <% } else { %>
+                                                                <em class="none">Nezadáno</em>
+                                                                <% } %>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                    <hr class="info-divider">
+
+                                    <p class="info-section-title">Contact Info:</p>
+                                    <table class="info-table">
+                                        <tr>
+                                            <td class="lbl">Email:</td>
+                                            <td class="val blue-text">
+                                                <%= profileUser.email %>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="lbl">Screenname:</td>
+                                            <td class="val blue-text">
+                                                <% if (profileUser.screenname && profileUser.screenname.trim()) { %>
+                                                    <%= profileUser.screenname %>
+                                                        <% } else if (isOwnProfile) { %>
+                                                            <a href="/profile/edit" class="prompt-edit">[ upravit
+                                                                screenname ]</a>
+                                                            <% } else { %>
+                                                                <em class="none">Nezadáno</em>
+                                                                <% } %>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="lbl">Mobile:</td>
+                                            <td class="val">
+                                                <% if (profileUser.mobile && profileUser.mobile.trim()) { %>
+                                                    <%= profileUser.mobile %>
+                                                        <% } else if (isOwnProfile) { %>
+                                                            <a href="/profile/edit" class="prompt-edit">[ upravit
+                                                                telefon ]</a>
+                                                            <% } else { %>
+                                                                <em class="none">Nezadáno</em>
+                                                                <% } %>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="lbl">Websites:</td>
+                                            <td class="val">
+                                                <% if (profileUser.websites && profileUser.websites.trim()) { %>
+                                                    <% profileUser.websites.split('\n').forEach(function(site) {
+                                                        site=site.trim(); if (site) { %>
+                                                        <a href="<%= site %>" target="_blank">
+                                                            <%= site %>
+                                                        </a><br>
+                                                        <% } }) %>
+                                                            <% } else if (isOwnProfile) { %>
+                                                                <a href="/profile/edit" class="prompt-edit">[ upravit
+                                                                    webové stránky ]</a>
+                                                                <% } else { %>
+                                                                    <em class="none">Nezadáno</em>
+                                                                    <% } %>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                    <hr class="info-divider">
+
+                                    <p class="info-section-title">Personal Info:</p>
+                                    <table class="info-table">
+                                        <tr>
+                                            <td class="lbl">Looking For:</td>
+                                            <td class="val blue-text">
+                                                <% if (profileUser.lookingFor && profileUser.lookingFor.trim()) { %>
+                                                    <%= profileUser.lookingFor %>
+                                                        <% } else if (isOwnProfile) { %>
+                                                            <a href="/profile/edit" class="prompt-edit">[ upravit hledám
+                                                                ]</a>
+                                                            <% } else { %>
+                                                                <em class="none">Nezadáno</em>
+                                                                <% } %>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="lbl">Interested In:</td>
+                                            <td class="val blue-text">
+                                                <% if (profileUser.interestedIn && profileUser.interestedIn.trim()) { %>
+                                                    <%= profileUser.interestedIn %>
+                                                        <% } else if (isOwnProfile) { %>
+                                                            <a href="/profile/edit" class="prompt-edit">[ upravit
+                                                                orientaci ]</a>
+                                                            <% } else { %>
+                                                                <em class="none">Nezadáno</em>
+                                                                <% } %>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="lbl">Relationship Status:</td>
+                                            <td class="val blue-text">
+                                                <% if (profileUser.relationshipStatus &&
+                                                    profileUser.relationshipStatus.trim()) { %>
+                                                    <%= profileUser.relationshipStatus %>
+                                                        <% } else if (isOwnProfile) { %>
+                                                            <a href="/profile/edit" class="prompt-edit">[ upravit vztah
+                                                                ]</a>
+                                                            <% } else { %>
+                                                                <em class="none">Nezadáno</em>
+                                                                <% } %>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="lbl">Political Views:</td>
+                                            <td class="val blue-text">
+                                                <% if (profileUser.politicalViews && profileUser.politicalViews.trim())
+                                                    { %>
+                                                    <%= profileUser.politicalViews %>
+                                                        <% } else if (isOwnProfile) { %>
+                                                            <a href="/profile/edit" class="prompt-edit">[ upravit
+                                                                politické názory ]</a>
+                                                            <% } else { %>
+                                                                <em class="none">Nezadáno</em>
+                                                                <% } %>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="lbl">Interests:</td>
+                                            <td class="val blue-text">
+                                                <% if (profileUser.interests && profileUser.interests.trim()) { %>
+                                                    <%= profileUser.interests %>
+                                                        <% } else if (isOwnProfile) { %>
+                                                            <a href="/profile/edit" class="prompt-edit">[ upravit zájmy
+                                                                ]</a>
+                                                            <% } else { %>
+                                                                <em class="none">Nezadáno</em>
+                                                                <% } %>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="lbl">Favorite Music:</td>
+                                            <td class="val blue-text">
+                                                <% if (profileUser.favoriteMusic && profileUser.favoriteMusic.trim()) {
+                                                    %>
+                                                    <%= profileUser.favoriteMusic %>
+                                                        <% } else if (isOwnProfile) { %>
+                                                            <a href="/profile/edit" class="prompt-edit">[ upravit
+                                                                oblíbenou hudbu ]</a>
+                                                            <% } else { %>
+                                                                <em class="none">Nezadáno</em>
+                                                                <% } %>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="lbl">Favorite Movies:</td>
+                                            <td class="val blue-text">
+                                                <% if (profileUser.favoriteMovies && profileUser.favoriteMovies.trim())
+                                                    { %>
+                                                    <%= profileUser.favoriteMovies %>
+                                                        <% } else if (isOwnProfile) { %>
+                                                            <a href="/profile/edit" class="prompt-edit">[ upravit
+                                                                oblíbené filmy ]</a>
+                                                            <% } else { %>
+                                                                <em class="none">Nezadáno</em>
+                                                                <% } %>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="lbl">About Me:</td>
+                                            <td class="val">
+                                                <% if (profileUser.bio && profileUser.bio.trim()) { %>
+                                                    <%= profileUser.bio %>
+                                                        <% } else if (isOwnProfile) { %>
+                                                            <a href="/profile/edit" class="prompt-edit">[ upravit
+                                                                informace o mně ]</a>
+                                                            <% } else { %>
+                                                                <em class="none">Nezadáno</em>
+                                                                <% } %>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 </body>
 
 </html>

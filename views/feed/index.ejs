@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feed – thefacebook</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Lucida+Grande:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* General Base Setup */
+        body.feed-page {
+            background-color: #ffffff !important;
+            font-family: "Lucida Grande", Tahoma, Verdana, Arial, sans-serif;
+            color: #111111;
+            margin: 0;
+            padding: 0;
+        }
+
+        .page-wrapper {
+            display: flex;
+            justify-content: center;
+            padding: 30px 20px;
+        }
+
+        .feed-container {
+            width: 100%;
+            max-width: 650px;
+            /* Increased overall width for a more open look */
+        }
+
+        /* Avatar Styles (Square with rounded corners) */
+        .avatar-square {
+            width: 65px;
+            /* Increased size */
+            height: 65px;
+            /* Increased size */
+            border-radius: 6px;
+            object-fit: cover;
+            border: 1px solid #cccccc;
+        }
+
+        .avatar-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #eceff5;
+            color: #3b5998;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        /* Main Composer Row Layout */
+        .composer-section {
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+            margin-bottom: 25px;
+        }
+
+        /* Composer / Publisher Grey Container */
+        .composer-card {
+            background-color: #f2f2f2;
+            padding: 12px;
+            border: 1px solid #cccccc;
+            flex-grow: 1;
+        }
+
+        .composer-header-text {
+            color: #777777;
+            font-weight: bold;
+            font-size: 14px;
+            /* Increased text size */
+            margin-bottom: 8px;
+        }
+
+        .composer-form {
+            display: flex;
+            gap: 8px;
+        }
+
+        .composer-textarea {
+            flex-grow: 1;
+            height: 32px;
+            /* Taller input field */
+            border: 1px solid #bdc7d8;
+            padding: 5px 8px;
+            font-family: inherit;
+            font-size: 15px;
+            /* Bigger input font */
+            box-sizing: border-box;
+        }
+
+        .share-btn {
+            background-color: #3b5998;
+            color: #ffffff;
+            border: 1px solid #29447e;
+            font-weight: bold;
+            padding: 0 16px;
+            font-size: 14px;
+            /* Bigger button text */
+            cursor: pointer;
+            height: 32px;
+            /* Matches input height */
+        }
+
+        .share-btn:hover {
+            background-color: #4c66a4;
+        }
+
+        /* Feed Posts Styles */
+        .posts-list {
+            background: transparent;
+        }
+
+        .post-card {
+            display: flex;
+            gap: 15px;
+            padding: 18px 0;
+            /* More spacing between items */
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+        }
+
+        .post-content-area {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            font-size: 15px;
+            /* Increased post body font size */
+            line-height: 1.4;
+        }
+
+        .post-main-text {
+            margin-bottom: 6px;
+        }
+
+        .post-author-name {
+            color: #3b5998;
+            text-decoration: none;
+            font-weight: bold;
+            margin-right: 6px;
+        }
+
+        .post-author-name:hover {
+            text-decoration: underline;
+        }
+
+        .post-body {
+            color: #111111;
+            word-break: break-word;
+        }
+
+        /* Meta timestamp and inline action links underneath */
+        .post-meta {
+            font-size: 12px;
+            /* Slightly bigger meta text */
+            color: #777777;
+        }
+
+        .post-meta a {
+            color: #3b5998;
+            text-decoration: none;
+        }
+
+        .post-meta a:hover {
+            text-decoration: underline;
+        }
+
+        /* Plain gray divider lines between entries */
+        .post-divider {
+            border: 0;
+            height: 1px;
+            background: #e5e5e5;
+            margin: 0;
+        }
+
+        .empty-feed {
+            text-align: center;
+            color: #777777;
+            padding: 30px 0;
+            font-size: 15px;
+        }
+    </style>
+</head>
+
+<body class="feed-page">
+
+    <%- include('../partials/nav', { activePage: 'feed' }) %>
+
+        <div class="page-wrapper">
+            <div class="feed-container">
+
+                <% if (locals.dbError) { %>
+                    <div class="alert-error"
+                        style="margin-bottom: 15px; padding: 10px; background: #fff0f0; border: 1px solid #ffcccc; color: #cc0000;">
+                        <strong>⚠ Databáze není připojena.</strong> Příspěvky nelze načíst ani ukládat.
+                    </div>
+                    <% } %>
+
+                        <div class="composer-section">
+                            <div class="composer-avatar">
+                                <% if (currentUser && currentUser.avatar) { %>
+                                    <img src="<%= currentUser.avatar %>" alt="Avatar" class="avatar-square">
+                                    <% } else { %>
+                                        <div class="avatar-square avatar-placeholder">
+                                            <%= currentUser ? currentUser.username.charAt(0).toUpperCase() : '?' %>
+                                        </div>
+                                        <% } %>
+                            </div>
+
+                            <div class="composer-card">
+                                <div class="composer-header-text">What's on your mind?</div>
+                                <form action="/feed" method="POST" class="composer-form">
+                                    <input type="text" name="content" class="composer-textarea" autocomplete="off" />
+                                    <button type="submit" class="share-btn">Sdílet</button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="posts-list">
+                            <% if (posts.length===0) { %>
+                                <div class="empty-feed">
+                                    <p>Zatím žádné příspěvky. Buď první!</p>
+                                </div>
+                                <% } %>
+
+                                    <% posts.forEach((post, index)=> { %>
+                                        <div class="post-card">
+                                            <div class="post-avatar">
+                                                <% if (post.author.avatar) { %>
+                                                    <img src="<%= post.author.avatar %>" alt="Avatar"
+                                                        class="avatar-square">
+                                                    <% } else { %>
+                                                        <div class="avatar-square avatar-placeholder">
+                                                            <%= post.author.username.charAt(0).toUpperCase() %>
+                                                        </div>
+                                                        <% } %>
+                                            </div>
+                                            <div class="post-content-area">
+                                                <div class="post-main-text">
+                                                    <a href="#" class="post-author-name">
+                                                        <%= post.author.fullName && post.author.fullName.trim() ?
+                                                            post.author.fullName : post.author.username %>
+                                                    </a>
+                                                    <span class="post-body">
+                                                        <%= post.content %>
+                                                    </span>
+                                                </div>
+                                                <div class="post-meta">
+                                                    <span class="post-time">
+                                                        <%= timeAgo(post.createdAt) %>
+                                                    </span>
+                                                    <span class="post-actions"> · <a href="#">Comment</a> · <a
+                                                            href="#">Like</a></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <% if (index < posts.length - 1) { %>
+                                            <hr class="post-divider">
+                                            <% } %>
+                                                <% }) %>
+                        </div>
+
+            </div>
+        </div>
+</body>
+
+</html>

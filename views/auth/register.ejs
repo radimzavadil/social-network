@@ -1,11 +1,51 @@
-<%- include('../partials/header', { title: 'registrace' }) %>
+<%- include('../partials/header', { title: 'thefacebook - Registrace' }) %>
 
-<h1>Registrace</h1>
+  <div style="max-width:1000px; margin:0 auto; padding:30px 20px 0; font-family:'Lucida Grande', sans-serif;">
 
-<form action="/register" method="POST">
-  <input type="text" name="username" placeholder="Uživatelské jméno" required>
-  <input type="password" name="password" placeholder="Heslo" required>
-  <button type="submit">Registrovat</button>
-</form>
+    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:50vh;">
 
-<%- include('../partials/footer') %>
+      <h2
+        style="font-size:20px; font-weight:bold; text-align:center; margin-bottom:20px; font-family:'Courier New',monospace; color:#000;">
+        [ Register for Thefacebook ]
+      </h2>
+
+      <div style="width:280px; flex-shrink:0; border:2px dashed #8899bb; background:#f0f2f7; padding:24px 20px;">
+        <form action="/register" method="POST">
+
+          <div style="display:flex; flex-direction:column; align-items:flex-end; margin-bottom:14px;">
+            <label style="font-size:14px; margin-bottom:4px; color:#000;">Username:</label>
+            <input type="text" name="username" required autocomplete="username"
+              style="width:160px; height:26px; background:#DADDE5; border:1px solid #000; font-size:13px; padding:3px 7px; color:#000;" />
+          </div>
+
+          <div style="display:flex; flex-direction:column; align-items:flex-end; margin-bottom:18px;">
+            <label style="font-size:14px; margin-bottom:4px; color:#000;">Password:</label>
+            <input type="password" name="password" required autocomplete="new-password"
+              style="width:160px; height:26px; background:#DADDE5; border:1px solid #000; font-size:13px; padding:3px 7px; color:#000;" />
+          </div>
+
+          <div style="display:flex; gap:10px; justify-content:flex-end;">
+            <button type="submit"
+              style="background:#5F8ACF; color:#fff; border:1px solid #3a6ab0; font-size:14px; padding:7px 20px; cursor:pointer; font-weight:bold;">
+              register
+            </button>
+            <a href="/login"
+              style="background:#5F8ACF; color:#fff; border:1px solid #3a6ab0; font-size:14px; padding:7px 20px; text-decoration:none; display:inline-block;">
+              login
+            </a>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+
+    <div style="text-align:center; padding:90px 0 50px; font-size:14px; color:#555; line-height:2.8;">
+      <div>about &nbsp;&nbsp; contact &nbsp;&nbsp; terms &nbsp;&nbsp; privacy</div>
+      <div>a Radim Zavadil production</div>
+      <div>Thefacebook &copy; 2026</div>
+    </div>
+
+  </div>
+
+  <%- include('../partials/footer') %>

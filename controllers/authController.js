@@ -67,7 +67,12 @@ exports.login = async (req, res) => {
 };
 
 exports.logout = (req, res) => {
-  req.session.destroy(() => {
-    res.redirect("/login");
-  });
+  req.session.destroy((err) => {
+    if (err) {
+      console.error("Chyba při mazání relace:", err);
+      return res.redirect("/feed");
+    }
+    res.clearCookie("connect.sid");
+    res.redirect("/");
+  }); // <-- Make sure this is closed right!
 };

@@ -6,9 +6,15 @@
   <div class="nav-brand">
     <img src="/logo.svg" alt="thefacebook" class="nav-logo" />
     <div class="nav-links">
-      <a href="/login">login</a>
-      <a href="/register">register</a>
-      <a href="/about">about</a>
+      <% if (locals.user) { %>
+        <a href="/feed">feed</a>
+        <a href="/profile">my profile</a>
+        <a href="/logout">log out</a>
+        <% } else { %>
+          <a href="/login">login</a>
+          <a href="/register">register</a>
+          <a href="/">about</a>
+          <% } %>
     </div>
   </div>
 </nav>

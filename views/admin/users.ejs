@@ -1,29 +1,57 @@
-<%- include('../partials/header', { title: 'správa uživatelů' }) %>
+<!DOCTYPE html>
+<html lang="cs">
 
-<% if (locals.dbError) { %>
-  <div style="background-color: #ffcccc; color: #990000; padding: 10px; border: 1px solid #990000; border-radius: 4px; margin-bottom: 20px;">
-    <strong>⚠️ Databáze není připojena:</strong> Uživatele nelze spravovat.
-  </div>
-<% } %>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Správa uživatelů – thefacebook</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Lucida+Grande:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
 
-<h1>Správa uživatelů</h1>
+<body>
+  <%- include('../partials/nav', {}) %>
 
-<% users.forEach(oneUser => { %>
-<div>
-  <p>
-    <strong><%= oneUser.username %></strong>
-    - role: <%= oneUser.role %>
-  </p>
+    <div class="page-wrapper">
 
-  <form action="/admin/users/<%= oneUser._id %>/role" method="POST">
-    <select name="role">
-      <option value="user" <%= oneUser.role === "user" ? "selected" : "" %>>user</option>
-      <option value="admin" <%= oneUser.role === "admin" ? "selected" : "" %>>admin</option>
-    </select>
-    <button type="submit">Změnit roli</button>
-  </form>
-</div>
-<hr>
-<% }) %>
+      <% if (locals.dbError) { %>
+        <div class="alert-error">
+          <strong>⚠️ Databáze není připojena:</strong> Uživatele nelze spravovat.
+        </div>
+        <% } %>
 
-<%- include('../partials/footer') %>
+          <div class="edit-container">
+            <div class="edit-header-bar">Správa uživatelů</div>
+            <div class="edit-body">
+
+              <% if (users.length===0) { %>
+                <p style="color: var(--fb-text-light); font-style: italic;">Žádní uživatelé.</p>
+                <% } %>
+
+                  <% users.forEach(oneUser=> { %>
+                    <div
+                      style="padding: 10px 0; border-bottom: 1px dotted var(--fb-border); display:flex; align-items:center; gap:16px;">
+                      <div style="flex:1;">
+                        <strong>
+                          <%= oneUser.username %>
+                        </strong>
+                        <span style="color:var(--fb-text-light); font-size:12px;"> — role: <%= oneUser.role %></span>
+                      </div>
+                      <form action="/admin/users/<%= oneUser._id %>/role" method="POST"
+                        style="display:flex; gap:6px; align-items:center;">
+                        <select name="role" class="form-input" style="width:auto; padding: 4px 8px;">
+                          <option value="user" <%=oneUser.role==="user" ? "selected" : "" %>>user</option>
+                          <option value="admin" <%=oneUser.role==="admin" ? "selected" : "" %>>admin</option>
+                        </select>
+                        <button type="submit" class="save-btn" style="padding: 4px 12px;">Změnit</button>
+                      </form>
+                    </div>
+                    <% }) %>
+
+            </div>
+          </div>
+    </div>
+</body>
+
+</html>

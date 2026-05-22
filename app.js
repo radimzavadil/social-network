@@ -7,7 +7,8 @@ const methodOverride = require("method-override");
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes");
-const profileRoutes = require("./routes/profileRoutes");  // ← NEW
+const feedRoutes = require("./routes/feedRoutes");
+const profileRoutes = require("./routes/profileRoutes");
 
 const app = express();
 
@@ -15,15 +16,23 @@ connectDB();
 
 const PORT = process.env.PORT || 3000;
 
+// View engine
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+// Body parsing
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+// Static files
 app.use(express.static(path.join(__dirname, "public")));
+
+// Method override (PUT, DELETE via forms)
 app.use(methodOverride("_method"));
 
+// Session
 app.use(session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET || "tajny-klic-123",
     resave: false,
     saveUninitialized: false
 }));
@@ -36,11 +45,17 @@ app.use((req, res, next) => {
 
 // Routes
 app.use("/admin", adminRoutes);
-app.use("/profile", profileRoutes);   // ← NEW
+app.use("/feed", feedRoutes);
+app.use("/profile", profileRoutes);
 app.use("/", authRoutes);
 
-// Home — render index.ejs
+// Home / Landing Page
 app.get("/", (req, res) => {
+    // If they are already logged in, you might want to skip the landing page and go straight to the feed
+    if (req.session.user) {
+        return res.redirect("/feed");
+    }
+    // Otherwise, show them the public index.ejs landing page
     res.render("index");
 });
 

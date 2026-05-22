@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Edit Profile</title>
+    <title>Edit My Profile</title>
     <style>
         * {
             margin: 0;
@@ -12,128 +12,143 @@
         }
 
         body {
-            background: #fff;
+            background: #dde2ea;
             font-family: 'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, sans-serif;
-            font-size: 11px;
-            color: #333;
-            min-height: 100vh;
-        }
-
-        .page {
-            max-width: 600px;
-            margin: 16px auto;
-            padding: 0 10px;
-        }
-
-        .frame {
-            border: 1px solid #c5ccde;
-        }
-
-        .frame-hd {
-            background: #6d84b4;
-            padding: 4px 10px;
-            color: #fff;
-            font-weight: bold;
-            font-size: 12px;
-            border-bottom: 1px solid #a0a8c0;
-        }
-
-        .frame-bd {
-            padding: 12px;
-        }
-
-        .section-title {
-            font-weight: 600;
+            font-size: 13px;
             color: #000;
-            font-size: 11px;
-            margin: 10px 0 5px 0;
-            padding-bottom: 2px;
-            border-bottom: 1px solid #c5ccde;
         }
 
-        .section-title:first-child {
-            margin-top: 0;
-        }
-
-        .field {
-            margin-bottom: 6px;
+        .main-container {
             display: flex;
-            align-items: flex-start;
-            gap: 6px;
+            gap: 25px;
+            max-width: 1150px;
+            margin: 30px auto;
+            padding: 0 20px;
         }
 
-        .field label {
-            width: 130px;
+        .sidebar-left {
+            width: 200px;
             flex-shrink: 0;
-            font-weight: bold;
-            color: #333;
-            padding-top: 3px;
-            font-size: 11px;
         }
 
-        .field input[type="text"],
-        .field input[type="email"],
-        .field textarea,
-        .field select {
-            flex: 1;
-            border: 1px solid #c5ccde;
-            padding: 2px 5px;
-            font-family: inherit;
-            font-size: 11px;
-            color: #333;
+        .nav-links-box {
+            border: 1px dashed #555555;
+            padding: 12px;
             background: #fff;
         }
 
-        .field input[type="text"]:focus,
-        .field input[type="email"]:focus,
-        .field textarea:focus {
-            outline: none;
-            border-color: #6d84b4;
+        .nav-links-box ul {
+            list-style: none;
         }
 
-        .field textarea {
-            height: 60px;
-            resize: vertical;
-        }
-
-        .btn-row {
-            display: flex;
-            gap: 8px;
-            margin-top: 14px;
-        }
-
-        .btn-save {
-            background: linear-gradient(to bottom, #e8ebf2, #d0d5e5);
-            border: 1px solid #a0a8c0;
-            color: #333;
-            padding: 3px 14px;
-            font-size: 11px;
-            font-family: inherit;
-            cursor: pointer;
-        }
-
-        .btn-save:hover {
-            background: linear-gradient(to bottom, #dde0ec, #c0c8dc);
-        }
-
-        .btn-cancel {
-            color: #3B5998;
-            font-size: 11px;
+        .nav-links-box ul li a {
+            color: #5471b0;
             text-decoration: none;
-            padding: 3px 0;
+            font-weight: 500;
         }
 
-        .btn-cancel:hover {
+        .nav-links-box ul li a:hover {
             text-decoration: underline;
         }
 
-        .flash-ok {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-            padding: 5px 10px;
-            margin-bottom: 10px;
-            font-size: 11px;
+        .profile-container {
+            flex: 1;
+            border: 2px solid #3b5998;
+            background-color: #fff;
+        }
+
+        .profile-topbar {
+            background: #4c66a4;
+            padding: 8px 15px;
+            border-bottom: 1px solid #3b5998;
+            color: #fff;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .profile-body {
+            display: flex;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .info-container {
+            border: 1px solid #3b5998;
+            width: 100%;
+        }
+
+        .info-box-hd {
+            background: #6d84b4;
+            color: #fff;
+            font-weight: bold;
+            font-size: 13px;
+            padding: 5px 12px;
+        }
+
+        .info-section {
+            padding: 15px;
+        }
+
+        .info-section-title {
+            font-weight: bold;
+            font-size: 13px;
+            color: #3b5998;
+            margin: 10px 0 6px 0;
+            border-bottom: 1px solid #6d84b4;
+            padding-bottom: 2px;
+        }
+
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 12px;
+        }
+
+        .info-table td {
+            padding: 5px 5px 5px 0;
+            vertical-align: middle;
+            font-size: 13px;
+        }
+
+        .info-table .lbl {
+            color: #000;
+            width: 150px;
+            white-space: nowrap;
+            font-weight: bold;
+        }
+
+        /* Retro text fields */
+        .edit-input {
+            width: 100%;
+            max-width: 350px;
+            height: 24px;
+            border: 1px solid #7f9db9;
+            padding: 2px 5px;
+            font-size: 13px;
+        }
+
+        .edit-textarea {
+            width: 100%;
+            max-width: 500px;
+            height: 80px;
+            border: 1px solid #7f9db9;
+            padding: 4px 5px;
+            font-size: 13px;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .btn-submit {
+            background: #f0f0f0;
+            border: 1px solid #7f9db9;
+            padding: 4px 15px;
+            font-size: 13px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-submit:hover {
+            background: #e5e5e5;
         }
     </style>
 </head>
@@ -142,136 +157,157 @@
 
     <%- include('../partials/nav') %>
 
-        <div class="page">
-            <div class="frame">
-                <div class="frame-hd">Edit My Profile</div>
-                <div class="frame-bd">
-
-                    <% if (locals.success) { %>
-                        <div class="flash-ok">✔ Profile saved successfully!</div>
-                        <% } %>
-
-                            <form action="/profile/edit" method="POST">
-
-                                <p class="section-title">Account Info:</p>
-                                <div class="field">
-                                    <label>Full Name</label>
-                                    <input type="text" name="fullName" value="<%= profileUser.fullName || '' %>">
-                                </div>
-
-                                <p class="section-title">Basic Info:</p>
-                                <div class="field">
-                                    <label>School / College</label>
-                                    <input type="text" name="college" value="<%= profileUser.college || '' %>">
-                                </div>
-                                <div class="field">
-                                    <label>Status</label>
-                                    <input type="text" name="status" value="<%= profileUser.status || '' %>"
-                                        placeholder="e.g. Student">
-                                </div>
-                                <div class="field">
-                                    <label>Sex</label>
-                                    <select name="sex">
-                                        <option value="">—</option>
-                                        <option value="Male" <%=profileUser.sex==='Male' ? 'selected' : '' %>>Male
-                                        </option>
-                                        <option value="Female" <%=profileUser.sex==='Female' ? 'selected' : '' %>>Female
-                                        </option>
-                                        <option value="Other" <%=profileUser.sex==='Other' ? 'selected' : '' %>>Other
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="field">
-                                    <label>Residence</label>
-                                    <input type="text" name="residence" value="<%= profileUser.residence || '' %>">
-                                </div>
-                                <div class="field">
-                                    <label>Birthday</label>
-                                    <input type="text" name="birthday" value="<%= profileUser.birthday || '' %>"
-                                        placeholder="MM/DD/YYYY">
-                                </div>
-                                <div class="field">
-                                    <label>Home Town</label>
-                                    <input type="text" name="hometown" value="<%= profileUser.hometown || '' %>">
-                                </div>
-                                <div class="field">
-                                    <label>High School</label>
-                                    <input type="text" name="highSchool" value="<%= profileUser.highSchool || '' %>">
-                                </div>
-
-                                <p class="section-title">Contact Info:</p>
-                                <div class="field">
-                                    <label>Email</label>
-                                    <input type="email" name="email" value="<%= profileUser.email || '' %>">
-                                </div>
-                                <div class="field">
-                                    <label>Screenname</label>
-                                    <input type="text" name="screenname" value="<%= profileUser.screenname || '' %>">
-                                </div>
-                                <div class="field">
-                                    <label>Mobile</label>
-                                    <input type="text" name="mobile" value="<%= profileUser.mobile || '' %>">
-                                </div>
-                                <div class="field">
-                                    <label>Websites</label>
-                                    <textarea name="websites"
-                                        placeholder="One URL per line"><%= profileUser.websites || '' %></textarea>
-                                </div>
-
-                                <p class="section-title">Personal Info:</p>
-                                <div class="field">
-                                    <label>Looking For</label>
-                                    <input type="text" name="lookingFor" value="<%= profileUser.lookingFor || '' %>"
-                                        placeholder="e.g. Friendship">
-                                </div>
-                                <div class="field">
-                                    <label>Interested In</label>
-                                    <input type="text" name="interestedIn"
-                                        value="<%= profileUser.interestedIn || '' %>">
-                                </div>
-                                <div class="field">
-                                    <label>Relationship Status</label>
-                                    <select name="relationshipStatus">
-                                        <option value="">— Not specified —</option>
-                                        <% ['Single','In a Relationship','Engaged','Married','It\'s Complicated','In an
-                                            Open Relationship','Widowed','Separated','Divorced'].forEach(function(s) {
-                                            %>
-                                            <option value="<%= s %>" <%=profileUser.relationshipStatus===s ? 'selected'
-                                                : '' %>><%= s %>
-                                            </option>
-                                            <% }) %>
-                                    </select>
-                                </div>
-                                <div class="field">
-                                    <label>Political Views</label>
-                                    <input type="text" name="politicalViews"
-                                        value="<%= profileUser.politicalViews || '' %>">
-                                </div>
-                                <div class="field">
-                                    <label>Interests</label>
-                                    <textarea name="interests"
-                                        placeholder="e.g. Film, Music, Hiking"><%= profileUser.interests || '' %></textarea>
-                                </div>
-                                <div class="field">
-                                    <label>Favorite Music</label>
-                                    <textarea name="favoriteMusic"><%= profileUser.favoriteMusic || '' %></textarea>
-                                </div>
-                                <div class="field">
-                                    <label>Favorite Movies</label>
-                                    <textarea name="favoriteMovies"><%= profileUser.favoriteMovies || '' %></textarea>
-                                </div>
-                                <div class="field">
-                                    <label>About Me</label>
-                                    <textarea name="bio" style="height:80px"><%= profileUser.bio || '' %></textarea>
-                                </div>
-
-                                <div class="btn-row">
-                                    <button type="submit" class="btn-save">Save Changes</button>
-                                    <a href="/profile" class="btn-cancel">Cancel</a>
-                                </div>
-                            </form>
-
+        <div class="main-container">
+            <div class="sidebar-left">
+                <div class="nav-links-box">
+                    <ul>
+                        <li><a href="/profile">&laquo; Cancel Changes</a></li>
+                    </ul>
                 </div>
+            </div>
+
+            <div class="profile-container">
+                <div class="profile-topbar">
+                    Edit Profile Information
+                </div>
+
+                <form action="/profile/edit" method="POST" enctype="multipart/form-data" class="profile-body"
+                    style="flex-direction: column;">
+
+                    <div class="info-container">
+                        <div class="info-box-hd">Edit System Profile Context</div>
+                        <div class="info-section">
+
+                            <p class="info-section-title">Account Info:</p>
+                            <table class="info-table">
+                                <tr>
+                                    <td class="lbl">Name:</td>
+                                    <td><input type="text" name="fullName" class="edit-input"
+                                            value="<%= profileUser.fullName || '' %>"></td>
+                                </tr>
+                            </table>
+
+                            <p class="info-section-title">Access Context:</p>
+                            <table class="info-table">
+                                <tr>
+                                    <td class="lbl">Access Location:</td>
+                                    <td><input type="text" name="accessLocation" class="edit-input"
+                                            value="<%= profileUser.accessLocation || '' %>"
+                                            placeholder="non-residential location"></td>
+                                </tr>
+                            </table>
+
+                            <p class="info-section-title">Basic Info:</p>
+                            <table class="info-table">
+                                <tr>
+                                    <td class="lbl">School / College:</td>
+                                    <td><input type="text" name="college" class="edit-input"
+                                            value="<%= profileUser.college || '' %>"></td>
+                                </tr>
+                                <tr>
+                                    <td class="lbl">Status:</td>
+                                    <td><input type="text" name="status" class="edit-input"
+                                            value="<%= profileUser.status || '' %>"></td>
+                                </tr>
+                                <tr>
+                                    <td class="lbl">Sex:</td>
+                                    <td><input type="text" name="sex" class="edit-input"
+                                            value="<%= profileUser.sex || '' %>"></td>
+                                </tr>
+                                <tr>
+                                    <td class="lbl">Residence:</td>
+                                    <td><input type="text" name="residence" class="edit-input"
+                                            value="<%= profileUser.residence || '' %>"></td>
+                                </tr>
+                                <tr>
+                                    <td class="lbl">Birthday:</td>
+                                    <td><input type="text" name="birthday" class="edit-input"
+                                            value="<%= profileUser.birthday || '' %>"></td>
+                                </tr>
+                                <tr>
+                                    <td class="lbl">Home Town:</td>
+                                    <td><input type="text" name="hometown" class="edit-input"
+                                            value="<%= profileUser.hometown || '' %>"></td>
+                                </tr>
+                                <tr>
+                                    <td class="lbl">High School:</td>
+                                    <td><input type="text" name="highSchool" class="edit-input"
+                                            value="<%= profileUser.highSchool || '' %>"></td>
+                                </tr>
+                            </table>
+
+                            <p class="info-section-title">Contact Info:</p>
+                            <table class="info-table">
+                                <tr>
+                                    <td class="lbl">Screenname:</td>
+                                    <td><input type="text" name="screenname" class="edit-input"
+                                            value="<%= profileUser.screenname || '' %>"></td>
+                                </tr>
+                                <tr>
+                                    <td class="lbl">Mobile:</td>
+                                    <td><input type="text" name="mobile" class="edit-input"
+                                            value="<%= profileUser.mobile || '' %>"></td>
+                                </tr>
+                                <tr>
+                                    <td class="lbl">Websites:</td>
+                                    <td><textarea name="websites" class="edit-textarea"
+                                            style="height: 50px;"><%= profileUser.websites || '' %></textarea></td>
+                                </tr>
+                            </table>
+
+                            <p class="info-section-title">Personal Info:</p>
+                            <table class="info-table">
+                                <tr>
+                                    <td class="lbl">Looking For:</td>
+                                    <td><input type="text" name="lookingFor" class="edit-input"
+                                            value="<%= profileUser.lookingFor || '' %>"></td>
+                                </tr>
+                                <tr>
+                                    <td class="lbl">Interested In:</td>
+                                    <td><input type="text" name="interestedIn" class="edit-input"
+                                            value="<%= profileUser.interestedIn || '' %>"></td>
+                                </tr>
+                                <tr>
+                                    <td class="lbl">Relationship Status:</td>
+                                    <td><input type="text" name="relationshipStatus" class="edit-input"
+                                            value="<%= profileUser.relationshipStatus || '' %>"></td>
+                                </tr>
+                                <tr>
+                                    <td class="lbl">Political Views:</td>
+                                    <td><input type="text" name="politicalViews" class="edit-input"
+                                            value="<%= profileUser.politicalViews || '' %>"></td>
+                                </tr>
+                                <tr>
+                                    <td class="lbl">Interests:</td>
+                                    <td><textarea name="interests"
+                                            class="edit-textarea"><%= profileUser.interests || '' %></textarea></td>
+                                </tr>
+                                <tr>
+                                    <td class="lbl">Favorite Music:</td>
+                                    <td><textarea name="favoriteMusic"
+                                            class="edit-textarea"><%= profileUser.favoriteMusic || '' %></textarea></td>
+                                </tr>
+                                <tr>
+                                    <td class="lbl">Favorite Movies:</td>
+                                    <td><textarea name="favoriteMovies"
+                                            class="edit-textarea"><%= profileUser.favoriteMovies || '' %></textarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="lbl">About Me (Bio):</td>
+                                    <td><textarea name="bio" class="edit-textarea"
+                                            style="height: 100px;"><%= profileUser.bio || '' %></textarea></td>
+                                </tr>
+                            </table>
+
+                            <div style="margin-top: 20px; text-align: right;">
+                                <button type="submit" class="btn-submit">Save Profile Changes</button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </form>
             </div>
         </div>
 </body>
