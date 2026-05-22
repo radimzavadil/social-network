@@ -8,4 +8,10 @@ router.get("/", requireLogin, profileController.getProfile);
 router.get("/edit", requireLogin, profileController.getEditProfile);
 router.post("/edit", requireLogin, upload.single("avatar"), profileController.updateProfile);
 
+// Search must come before /:username so it doesn't get captured
+router.get("/search", requireLogin, profileController.searchProfile);
+
+// View another user's profile
+router.get("/:username", requireLogin, profileController.getPublicProfile);
+
 module.exports = router;

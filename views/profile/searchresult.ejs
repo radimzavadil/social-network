@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results – thefacebook</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #dde2ea;
+            font-family: 'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, sans-serif;
+            font-size: 13px;
+            color: #000;
+        }
+
+        .main-container {
+            display: flex;
+            gap: 25px;
+            max-width: 1150px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .sidebar-left { width: 200px; flex-shrink: 0; }
+
+        .nav-links-box {
+            border: 1px dashed #555555;
+            padding: 12px;
+            background: #fff;
+        }
+
+        .nav-links-box ul { list-style: none; }
+
+        .nav-links-box ul li { margin-bottom: 8px; }
+
+        .nav-links-box ul li a {
+            color: #5471b0;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-links-box ul li a:hover { text-decoration: underline; }
+
+        .profile-container {
+            flex: 1;
+            border: 2px solid #3b5998;
+            background-color: #fff;
+        }
+
+        .profile-topbar {
+            background: #4c66a4;
+            padding: 8px 15px;
+            border-bottom: 1px solid #3b5998;
+            color: #fff;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .content-body { padding: 20px; }
+
+        .result-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 10px 0;
+            border-bottom: 1px dotted #6d84b4;
+        }
+
+        .result-card:last-child { border-bottom: none; }
+
+        .result-avatar {
+            width: 55px;
+            height: 55px;
+            object-fit: cover;
+            border: 1px solid #bcbcbc;
+            flex-shrink: 0;
+        }
+
+        .result-avatar-ph {
+            width: 55px;
+            height: 55px;
+            background: #e0e4f0;
+            border: 1px solid #bcbcbc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #3b5998;
+            flex-shrink: 0;
+        }
+
+        .result-info { flex: 1; }
+
+        .result-name {
+            font-weight: bold;
+            font-size: 14px;
+            color: #3b5998;
+            text-decoration: none;
+        }
+
+        .result-name:hover { text-decoration: underline; }
+
+        .result-sub { color: #555; font-size: 12px; margin-top: 2px; }
+
+        .not-found {
+            text-align: center;
+            padding: 40px 0;
+            color: #555;
+        }
+
+        .not-found p { margin-bottom: 16px; font-size: 14px; }
+
+        .back-link {
+            display: inline-block;
+            color: #5471b0;
+            text-decoration: none;
+            font-size: 13px;
+            border: 1px solid #5471b0;
+            padding: 5px 14px;
+        }
+
+        .back-link:hover { background: #5471b0; color: #fff; }
+    </style>
+</head>
+<body>
+
+<%- include('../partials/nav') %>
+
+<div class="main-container">
+
+    <div class="sidebar-left">
+        <div class="nav-links-box">
+            <ul>
+                <li><a href="/profile">&laquo; My Profile</a></li>
+                <li><a href="/friends/requests">Friend Requests</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="profile-container">
+        <div class="profile-topbar">
+            Search Results for "<%= query %>"
+        </div>
+
+        <div class="content-body">
+
+            <% if (locals.dbError) { %>
+                <p style="color:#cc0000;">⚠ Databáze není připojena.</p>
+            <% } else if (results.length === 0) { %>
+                <div class="not-found">
+                    <p>No users found matching "<strong><%= query %></strong>".</p>
+                    <a href="/profile" class="back-link">&laquo; Go Back</a>
+                </div>
+            <% } else { %>
+                <p style="margin-bottom: 14px; color: #555;">Found <%= results.length %> result<%= results.length !== 1 ? 's' : '' %>:</p>
+                <% results.forEach(function(u) { %>
+                <div class="result-card">
+                    <% if (u.avatar) { %>
+                        <img src="<%= u.avatar %>" alt="<%= u.username %>" class="result-avatar">
+                    <% } else { %>
+                        <div class="result-avatar-ph"><%= u.username.charAt(0).toUpperCase() %></div>
+                    <% } %>
+                    <div class="result-info">
+                        <a href="/profile/<%= u.username %>" class="result-name">
+                            <%= u.fullName || u.username %>
+                        </a>
+                        <% if (u.fullName) { %>
+                        <div class="result-sub">@<%= u.username %></div>
+                        <% } %>
+                        <% if (u.college) { %>
+                        <div class="result-sub"><%= u.college %></div>
+                        <% } %>
+                    </div>
+                    <a href="/profile/<%= u.username %>" style="color:#5471b0; text-decoration:none; font-size:12px; border:1px solid #5471b0; padding:3px 10px;">
+                        view profile
+                    </a>
+                </div>
+                <% }) %>
+            <% } %>
+
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

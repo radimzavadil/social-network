@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>User Not Found – thefacebook</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #dde2ea;
+            font-family: 'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, sans-serif;
+            font-size: 13px;
+            color: #000;
+        }
+        .main-container {
+            display: flex;
+            gap: 25px;
+            max-width: 1150px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .sidebar-left { width: 200px; flex-shrink: 0; }
+        .nav-links-box { border: 1px dashed #555555; padding: 12px; background: #fff; }
+        .nav-links-box ul { list-style: none; }
+        .nav-links-box ul li { margin-bottom: 8px; }
+        .nav-links-box ul li a { color: #5471b0; text-decoration: none; font-weight: 500; }
+        .nav-links-box ul li a:hover { text-decoration: underline; }
+        .profile-container { flex: 1; border: 2px solid #3b5998; background-color: #fff; }
+        .profile-topbar {
+            background: #4c66a4;
+            padding: 8px 15px;
+            border-bottom: 1px solid #3b5998;
+            color: #fff;
+            font-size: 15px;
+            font-weight: bold;
+        }
+        .content-body { padding: 30px 20px; text-align: center; }
+        .content-body p { margin-bottom: 20px; font-size: 14px; color: #555; }
+        .back-link {
+            display: inline-block;
+            color: #5471b0;
+            text-decoration: none;
+            font-size: 13px;
+            border: 1px solid #5471b0;
+            padding: 5px 14px;
+        }
+        .back-link:hover { background: #5471b0; color: #fff; }
+    </style>
+</head>
+<body>
+
+<%- include('../partials/nav') %>
+
+<div class="main-container">
+    <div class="sidebar-left">
+        <div class="nav-links-box">
+            <ul>
+                <li><a href="/profile">&laquo; My Profile</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="profile-container">
+        <div class="profile-topbar">User Not Found</div>
+        <div class="content-body">
+            <p>The user "<strong><%= username %></strong>" does not exist.</p>
+            <a href="/profile" class="back-link">&laquo; Go Back</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

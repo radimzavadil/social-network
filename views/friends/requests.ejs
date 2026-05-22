@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>Friend Requests – thefacebook</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #dde2ea;
+            font-family: 'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, sans-serif;
+            font-size: 13px;
+            color: #000;
+        }
+
+        .main-container {
+            display: flex;
+            gap: 25px;
+            max-width: 1150px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .sidebar-left { width: 200px; flex-shrink: 0; }
+
+        .nav-links-box {
+            border: 1px dashed #555555;
+            padding: 12px;
+            background: #fff;
+        }
+
+        .nav-links-box ul { list-style: none; }
+        .nav-links-box ul li { margin-bottom: 8px; }
+        .nav-links-box ul li a { color: #5471b0; text-decoration: none; font-weight: 500; }
+        .nav-links-box ul li a:hover { text-decoration: underline; }
+
+        .profile-container {
+            flex: 1;
+            border: 2px solid #3b5998;
+            background-color: #fff;
+        }
+
+        .profile-topbar {
+            background: #4c66a4;
+            padding: 8px 15px;
+            border-bottom: 1px solid #3b5998;
+            color: #fff;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .content-body { padding: 20px; }
+
+        .request-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 0;
+            border-bottom: 1px dotted #6d84b4;
+        }
+
+        .request-card:last-child { border-bottom: none; }
+
+        .req-avatar {
+            width: 65px;
+            height: 65px;
+            object-fit: cover;
+            border: 1px solid #bcbcbc;
+            flex-shrink: 0;
+        }
+
+        .req-avatar-ph {
+            width: 65px;
+            height: 65px;
+            background: #e0e4f0;
+            border: 1px solid #bcbcbc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #3b5998;
+            flex-shrink: 0;
+        }
+
+        .req-info { flex: 1; }
+
+        .req-name {
+            font-weight: bold;
+            font-size: 14px;
+            color: #3b5998;
+            text-decoration: none;
+        }
+
+        .req-name:hover { text-decoration: underline; }
+
+        .req-sub { color: #555; font-size: 12px; margin-top: 3px; }
+
+        .req-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .btn-accept {
+            background: #3b5998;
+            color: #fff;
+            border: 1px solid #29447e;
+            padding: 5px 14px;
+            font-size: 13px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn-accept:hover { background: #4c66a4; }
+
+        .btn-deny {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #aaa;
+            padding: 5px 14px;
+            font-size: 13px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn-deny:hover { background: #e0e0e0; }
+
+        .empty-msg {
+            text-align: center;
+            color: #777;
+            padding: 40px 0;
+            font-size: 14px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<%- include('../partials/nav') %>
+
+<div class="main-container">
+
+    <div class="sidebar-left">
+        <div class="nav-links-box">
+            <ul>
+                <li><a href="/profile">&laquo; My Profile</a></li>
+                <li><a href="/feed">Feed</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="profile-container">
+        <div class="profile-topbar">Friend Requests</div>
+
+        <div class="content-body">
+
+            <% if (locals.dbError) { %>
+                <p style="color:#cc0000;">⚠ Databáze není připojena.</p>
+            <% } else if (requests.length === 0) { %>
+                <div class="empty-msg">You have no pending friend requests.</div>
+            <% } else { %>
+                <p style="margin-bottom: 16px; color:#555;">
+                    You have <strong><%= requests.length %></strong> pending friend request<%= requests.length !== 1 ? 's' : '' %>:
+                </p>
+
+                <% requests.forEach(function(req) { %>
+                <div class="request-card">
+                    <% if (req.sender.avatar) { %>
+                        <img src="<%= req.sender.avatar %>" alt="<%= req.sender.username %>" class="req-avatar">
+                    <% } else { %>
+                        <div class="req-avatar-ph"><%= req.sender.username.charAt(0).toUpperCase() %></div>
+                    <% } %>
+
+                    <div class="req-info">
+                        <a href="/profile/<%= req.sender.username %>" class="req-name">
+                            <%= req.sender.fullName || req.sender.username %>
+                        </a>
+                        <% if (req.sender.fullName) { %>
+                        <div class="req-sub">@<%= req.sender.username %></div>
+                        <% } %>
+                        <% if (req.sender.college) { %>
+                        <div class="req-sub"><%= req.sender.college %></div>
+                        <% } %>
+                        <div class="req-sub" style="margin-top:4px; color:#999;">
+                            Sent <%= new Date(req.createdAt).toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' }) %>
+                        </div>
+                    </div>
+
+                    <div class="req-actions">
+                        <form action="/friends/accept/<%= req._id %>" method="POST">
+                            <button type="submit" class="btn-accept">Accept</button>
+                        </form>
+                        <form action="/friends/deny/<%= req._id %>" method="POST">
+                            <button type="submit" class="btn-deny">Deny</button>
+                        </form>
+                    </div>
+                </div>
+                <% }) %>
+            <% } %>
+
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

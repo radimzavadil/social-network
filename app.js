@@ -9,6 +9,7 @@ const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const feedRoutes = require("./routes/feedRoutes");
 const profileRoutes = require("./routes/profileRoutes");
+const friendRoutes = require("./routes/friendRoutes");
 
 const app = express();
 
@@ -47,15 +48,14 @@ app.use((req, res, next) => {
 app.use("/admin", adminRoutes);
 app.use("/feed", feedRoutes);
 app.use("/profile", profileRoutes);
+app.use("/friends", friendRoutes);
 app.use("/", authRoutes);
 
 // Home / Landing Page
 app.get("/", (req, res) => {
-    // If they are already logged in, you might want to skip the landing page and go straight to the feed
     if (req.session.user) {
         return res.redirect("/feed");
     }
-    // Otherwise, show them the public index.ejs landing page
     res.render("index");
 });
 
