@@ -20,6 +20,7 @@
             color: #000;
         }
 
+        /* ── TWO-COLUMN MAIN LAYOUT CONTAINER ── */
         .main-container {
             display: flex;
             gap: 25px;
@@ -28,6 +29,7 @@
             padding: 0 20px;
         }
 
+        /* ── ULTIMATE LEFT MENU (Dashed Section) ── */
         .sidebar-left {
             width: 200px;
             flex-shrink: 0;
@@ -40,7 +42,7 @@
             background: #fff;
         }
 
-        .search-dashed-box input[type="text"] {
+        .search-dashed-box input[type=\"text\"] {
             width: 120px;
             font-size: 12px;
             border: 1px solid #7f9db9;
@@ -86,12 +88,15 @@
             text-decoration: underline;
         }
 
+        /* ── FACEBOOK PROFILE BOX (Solid Border Wrapper) ── */
         .profile-container {
             flex: 1;
             border: 2px solid #3b5998;
             background-color: #fff;
+            box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.05);
         }
 
+        /* ── PROFILE HEADER BAR ── */
         .profile-topbar {
             background: #4c66a4;
             padding: 8px 15px;
@@ -112,12 +117,14 @@
             color: #fff;
         }
 
+        /* ── INNER BODY LAYOUT ── */
         .profile-body {
             display: flex;
             padding: 20px;
             gap: 20px;
         }
 
+        /* ── COLUMN LEFT (Inside Profile) ── */
         .col-left {
             width: 240px;
             flex-shrink: 0;
@@ -126,11 +133,13 @@
             gap: 15px;
         }
 
+        /* ── COLUMN RIGHT (Inside Profile) ── */
         .col-right {
             flex: 1;
             min-width: 0;
         }
 
+        /* ── GENERIC BOX ── */
         .box {
             border: 1px solid #3b5998;
             margin-bottom: 1px;
@@ -154,6 +163,18 @@
             line-height: 1.4;
         }
 
+        .box-bd p a,
+        a.classic-link {
+            color: #5471b0;
+            text-decoration: none;
+        }
+
+        .box-bd p a:hover,
+        a.classic-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ── PICTURE ── */
         .pic-wrap {
             width: 100%;
             border: 1px solid #bcbcbc;
@@ -180,6 +201,7 @@
             padding: 35px 0;
         }
 
+        /* Buttons Box below image */
         .action-buttons-box {
             border: 1px solid #bcbcbc;
             display: flex;
@@ -205,47 +227,7 @@
             text-decoration: underline;
         }
 
-        /* Friend request button — same style as action-link but as a form button */
-        .action-form {
-            margin: 0;
-            padding: 0;
-            border: 0;
-            border-bottom: 1px solid #bcbcbc;
-        }
-
-        .action-form:last-child {
-            border-bottom: none;
-        }
-
-        .action-btn {
-            display: block;
-            width: 100%;
-            text-align: left;
-            color: #5471b0;
-            padding: 8px 10px;
-            font-size: 13px;
-            background: #fff;
-            border: none;
-            cursor: pointer;
-            font-family: inherit;
-        }
-
-        .action-btn:hover {
-            background: #f7f7f7;
-            text-decoration: underline;
-        }
-
-        .action-btn.friend-status {
-            color: #777;
-            cursor: default;
-            font-style: italic;
-        }
-
-        .action-btn.friend-status:hover {
-            background: #fff;
-            text-decoration: none;
-        }
-
+        /* Form upload wrapper */
         .upload-strip {
             padding: 8px;
             border-top: 1px dashed #bcbcbc;
@@ -266,6 +248,7 @@
             cursor: pointer;
         }
 
+        /* ── INFORMATION SECTION (right col) ── */
         .info-container {
             border: 1px solid #3b5998;
         }
@@ -341,6 +324,7 @@
             margin: 10px 0 15px 0;
         }
 
+        /* ── FRIENDS GRID ── */
         .friends-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -352,10 +336,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-        }
-
-        .f-thumb a {
-            text-decoration: none;
         }
 
         .f-thumb img {
@@ -376,9 +356,6 @@
             align-items: center;
             justify-content: center;
             margin-bottom: 4px;
-            font-size: 22px;
-            font-weight: bold;
-            color: #3b5998;
         }
 
         .f-name {
@@ -388,11 +365,13 @@
             line-height: 1.2;
         }
 
+        /* Setup style rules for placeholders */
         em.none {
             color: #777;
             font-style: italic;
         }
 
+        /* Light grey styling for prompts */
         a.prompt-edit {
             color: #94a3b8 !important;
             font-style: italic;
@@ -416,31 +395,24 @@
 
             <div class="main-container">
 
-                <!-- SIDEBAR -->
                 <div class="sidebar-left">
-
-                    <!-- Quick Search -->
                     <div class="search-dashed-box">
-                        <form action="/profile/search" method="GET" style="display:inline;">
-                            <input type="text" name="q" placeholder="search..." value="">
-                            <button type="submit">go</button>
-                        </form>
+                        <input type="text" value="">
+                        <button type="button">go</button>
                         <br>
                         <span class="search-label">quick search</span>
                     </div>
 
                     <div class="nav-links-box">
                         <ul>
-                            <li><a href="/profile">My Profile</a></li>
-                            <% if (isOwnProfile) { %>
-                                <li><a href="/profile/edit">Edit Profile</a></li>
-                                <% } %>
-                                    <li><a href="/friends/requests">Friend Requests</a></li>
+                            <li><a href="/profile/edit">My Profile [ edit ]</a></li>
+                            <li><a href="#">My Friends</a></li>
+                            <li><a href="/friends/requests">Friend Requests</a></li>
                         </ul>
                     </div>
                 </div>
 
-                <!-- PROFILE MAIN -->
+
                 <div class="profile-container">
 
                     <div class="profile-topbar">
@@ -460,7 +432,6 @@
 
                     <div class="profile-body">
 
-                        <!-- LEFT COLUMN -->
                         <div class="col-left">
 
                             <div class="box">
@@ -470,33 +441,16 @@
                                         <% if (profileUser.avatar) { %>
                                             <img src="<%= profileUser.avatar %>" alt="<%= profileUser.username %>">
                                             <% } else { %>
-                                                <div class="pic-empty"><span>No photo</span></div>
+                                                <div class="pic-empty">
+                                                    <span>No photo</span>
+                                                </div>
                                                 <% } %>
                                     </div>
                                 </div>
 
                                 <div class="action-buttons-box">
-                                    <!-- Message and Poke — always shown -->
                                     <a href="#" class="action-link">Send <%= profileUser.username %> a Message</a>
                                     <a href="#" class="action-link">Poke Him!</a>
-
-                                    <!-- Friend request button — only when viewing someone else's profile -->
-                                    <% if (!isOwnProfile) { %>
-                                        <% if (friendStatus==='friends' ) { %>
-                                            <span class="action-btn friend-status">✓ Already Friends</span>
-                                            <% } else if (friendStatus==='sent' ) { %>
-                                                <span class="action-btn friend-status">Friend Request Sent</span>
-                                                <% } else if (friendStatus==='received' ) { %>
-                                                    <a href="/friends/requests" class="action-link">Respond to Friend
-                                                        Request</a>
-                                                    <% } else { %>
-                                                        <form action="/friends/send/<%= profileUser.username %>"
-                                                            method="POST" class="action-form">
-                                                            <button type="submit" class="action-btn">Add <%=
-                                                                    profileUser.username %> as Friend</button>
-                                                        </form>
-                                                        <% } %>
-                                                            <% } %>
                                 </div>
 
                                 <% if (isOwnProfile) { %>
@@ -512,9 +466,7 @@
                                 <div class="box-hd">Connection</div>
                                 <div class="box-bd">
                                     <% if (profileUser.relationshipStatus && profileUser.relationshipStatus.trim()) { %>
-                                        <p>
-                                            <%= profileUser.relationshipStatus %>
-                                        </p>
+                                        <p>You are in a relationship with <%= profileUser.username %>.</p>
                                         <% } else { %>
                                             <p><em class="none">Not specified.</em></p>
                                             <% } %>
@@ -522,16 +474,19 @@
                             </div>
 
                             <div class="box">
-                                <div class="box-hd">Friends in Common</div>
+                                <div class="box-hd">Mutual Friends</div>
                                 <div class="box-bd">
-                                    <% if (profileUser.friends && profileUser.friends.length> 0) { %>
-                                        <p><a href="#friends-list">
-                                                <%= profileUser.friends.length %> friend<%= profileUser.friends.length
-                                                        !==1 ? 's' : '' %>
-                                            </a></p>
-                                        <% } else { %>
-                                            <p>No friends yet.</p>
-                                            <% } %>
+                                    <% if (isOwnProfile) { %>
+                                        <p>You have <a href="#friends-list">
+                                                <%= profileUser.friends ? profileUser.friends.length : 0 %> friends
+                                            </a>.</p>
+                                        <% } else if (mutualCount> 0) { %>
+                                            <p>You have <a href="#friends-list">
+                                                    <%= mutualCount %> mutual friend<%= mutualCount !==1 ? 's' : '' %>
+                                                </a> with <%= profileUser.username %>.</p>
+                                            <% } else { %>
+                                                <p>You have 0 mutual friends with <%= profileUser.username %>.</p>
+                                                <% } %>
                                 </div>
                             </div>
 
@@ -553,19 +508,14 @@
                                         <div class="friends-grid">
                                             <% profileUser.friends.forEach(function(friend) { %>
                                                 <div class="f-thumb">
-                                                    <a href="/profile/<%= friend.username %>">
-                                                        <% if (friend.avatar) { %>
-                                                            <img src="<%= friend.avatar %>"
-                                                                alt="<%= friend.username %>">
-                                                            <% } else { %>
-                                                                <div class="f-thumb-ph">
-                                                                    <%= friend.username.charAt(0).toUpperCase() %>
-                                                                </div>
-                                                                <% } %>
-                                                    </a>
-                                                    <span class="f-name">
-                                                        <%= friend.username %>
-                                                    </span>
+                                                    <% if (friend.avatar) { %>
+                                                        <img src="<%= friend.avatar %>" alt="<%= friend.username %>">
+                                                        <% } else { %>
+                                                            <div class="f-thumb-ph"></div>
+                                                            <% } %>
+                                                                <span class="f-name">
+                                                                    <%= friend.username %>
+                                                                </span>
                                                 </div>
                                                 <% }) %>
                                         </div>
@@ -576,8 +526,6 @@
                             </div>
 
                         </div>
-
-                        <!-- RIGHT COLUMN -->
                         <div class="col-right">
                             <div class="info-container">
                                 <div class="info-box-hd">
@@ -717,7 +665,7 @@
                                         <tr>
                                             <td class="lbl">Email:</td>
                                             <td class="val blue-text">
-                                                <%= profileUser.email || '' %>
+                                                <%= profileUser.email %>
                                             </td>
                                         </tr>
                                         <tr>
@@ -882,11 +830,67 @@
 
                                 </div>
                             </div>
-                        </div>
 
+                            <!-- WALL -->
+                            <div class="info-container" style="margin-top:20px;">
+                                <div class="info-box-hd"><span>Wall</span></div>
+                                <div class="info-section">
+                                    <form action="/profile/wall" method="POST"
+                                        style="display:flex;gap:8px;margin-bottom:18px;">
+                                        <input type="hidden" name="profileUserId" value="<%= profileUser._id %>">
+                                        <input type="text" name="content"
+                                            placeholder="Write on <%= profileUser.username %>'s wall..."
+                                            style="flex:1;height:28px;border:1px solid #7f9db9;padding:3px 8px;font-size:13px;font-family:inherit;">
+                                        <button type="submit"
+                                            style="background:#3b5998;color:#fff;border:1px solid #29447e;font-size:13px;padding:4px 14px;cursor:pointer;font-weight:bold;">
+                                            Post
+                                        </button>
+                                    </form>
+
+                                    <% if (wallPosts && wallPosts.length> 0) { %>
+                                        <% wallPosts.forEach(function(wp) { %>
+                                            <div
+                                                style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #e5e5e5;">
+                                                <div style="flex-shrink:0;">
+                                                    <% if (wp.author.avatar) { %>
+                                                        <img src="<%= wp.author.avatar %>" alt=""
+                                                            style="width:40px;height:40px;object-fit:cover;border:1px solid #ccc;border-radius:4px;">
+                                                        <% } else { %>
+                                                            <div
+                                                                style="width:40px;height:40px;background:#eceff5;border:1px solid #ccc;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#3b5998;font-size:16px;">
+                                                                <%= wp.author.username.charAt(0).toUpperCase() %>
+                                                            </div>
+                                                            <% } %>
+                                                </div>
+                                                <div style="flex:1;">
+                                                    <div style="font-size:13px;">
+                                                        <a href="/profile/<%= wp.author.username %>"
+                                                            style="color:#3b5998;text-decoration:none;font-weight:bold;">
+                                                            <%= wp.author.fullName && wp.author.fullName.trim() ?
+                                                                wp.author.fullName : wp.author.username %>
+                                                        </a>
+                                                        <span style="color:#111;margin-left:4px;">
+                                                            <%= wp.content %>
+                                                        </span>
+                                                    </div>
+                                                    <div style="font-size:11px;color:#999;margin-top:3px;">
+                                                        <%= new
+                                                            Date(wp.createdAt).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})
+                                                            %>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <% }) %>
+                                                <% } else { %>
+                                                    <p style="color:#777;font-style:italic;font-size:13px;">No posts on
+                                                        this wall yet.</p>
+                                                    <% } %>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
-
             </div>
 </body>
 

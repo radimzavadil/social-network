@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" id="add">
+  <path fill="#a1b0cd" fill-rule="evenodd" stroke="#3b5998" stroke-width="1.465" d="M.733 49.278h41.202v-5.836c0-4.367-17.149-1.492-12.426-18.965 5.91-21.869-20.68-21.867-14.77 0C19.467 41.965.734 39.007.734 43.442v5.836z"></path>
+  <path fill="#d0e4ba" d="M24.89 50.01v-3.555h-7.112V32.232H24.89V25.121H39.111V32.232h7.112V46.454H39.112v7.112H24.889V50.01z"></path>
+  <path fill="#47970e" d="M24.89 50.01v-3.555h-7.112V32.232H24.89V25.121H39.111V32.232h7.112V46.454H39.112v7.112H24.889V50.01zm10.666-3.555v-3.556H42.667V35.788H35.556V28.677H28.445V35.788H21.334V42.899H28.445V50.01H35.556v-3.555z"></path>
+  <g fill="#fff" transform="translate(-661.334 -198.879)scale(3.55556)">
+    <rect width="8.829" height="2.963" x="62.5" y="-201.5" stroke="#47970e" stroke-linecap="round" stroke-linejoin="round" rx="0" ry="0" transform="rotate(90)"></rect>
+    <rect width="4.977" height="3.022" x="196.525" y="62.498" stroke="#47970e" stroke-linecap="round" stroke-linejoin="round" stroke-width=".996" rx="0" ry="0"></rect>
+    <rect width="6.992" height="2.869" x="196.508" y="68.5" stroke="#47970e" stroke-linecap="round" stroke-linejoin="round" rx="0" ry="0"></rect>
+    <rect width="2" height="6" x="199" y="63" ry="0"></rect>
+  </g>
+</svg>

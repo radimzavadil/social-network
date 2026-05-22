@@ -1,115 +1,63 @@
 const mongoose = require("mongoose");
 const User = require("../models/User");
-const FriendRequest = require("../models/FriendRequest");
+const WallPost = require("../models/Wallpost");
+const ActivityEvent = require("../models/ActivityEvent");
 
 const isConnected = () => mongoose.connection.readyState === 1;
 
-// My own profile
+// Fields that trigger activity events when changed
+const TRACKED_FIELDS = {
+    status: "profile_edit",
+    college: "profile_edit",
+    residence: "profile_edit",
+    hometown: "profile_edit",
+    highSchool: "profile_edit",
+    relationshipStatus: "profile_edit",
+    birthday: "birthday_edit",
+    politicalViews: "profile_edit",
+    lookingFor: "profile_edit",
+};
+
 exports.getProfile = async (req, res) => {
     if (!isConnected()) {
-        return res.render("profile/show", { profileUser: null, user: null, dbError: true, friendStatus: null });
+        return res.render("profile/show", { profileUser: null, user: null, wallPosts: [], mutualCount: 0, dbError: true });
     }
     try {
         const user = await User.findById(req.session.user.id).populate("friends", "username fullName avatar");
         if (!user) return res.redirect("/login");
-
-        res.render("profile/show", {
-            profileUser: user,
-            user: user,
-            dbError: false,
-            friendStatus: null
-        });
+        const wallPosts = await WallPost.find({ profile: user._id })
+            .populate("author", "username fullName avatar")
+            .sort({ createdAt: -1 });
+        res.render("profile/show", { profileUser: user, user, wallPosts, mutualCount: 0, dbError: false });
     } catch (error) {
         console.error(error);
         res.status(500).send("Chyba při načítání profilu.");
     }
 };
 
-// Someone else's profile
-exports.getPublicProfile = async (req, res) => {
+exports.getProfileByUsername = async (req, res) => {
     if (!isConnected()) {
-        return res.render("profile/show", { profileUser: null, user: null, dbError: true, friendStatus: null });
+        return res.render("profile/show", { profileUser: null, user: null, wallPosts: [], mutualCount: 0, dbError: true });
     }
     try {
-        const sessionUser = await User.findById(req.session.user.id);
-        const profileUser = await User.findOne({ username: req.params.username })
-            .populate("friends", "username fullName avatar");
-
-        if (!profileUser) {
-            return res.render("profile/notfound", { username: req.params.username, user: sessionUser });
-        }
-
-        // If it's their own profile, redirect to /profile
-        if (profileUser._id.toString() === sessionUser._id.toString()) {
-            return res.redirect("/profile");
-        }
-
-        // Check friend request status between these two users
-        const existingRequest = await FriendRequest.findOne({
-            $or: [
-                { sender: sessionUser._id, recipient: profileUser._id },
-                { sender: profileUser._id, recipient: sessionUser._id }
-            ]
-        });
-
-        let friendStatus = null; // null = no relation
-        if (existingRequest) {
-            if (existingRequest.status === "accepted") {
-                friendStatus = "friends";
-            } else if (existingRequest.status === "pending") {
-                if (existingRequest.sender.toString() === sessionUser._id.toString()) {
-                    friendStatus = "sent"; // I sent the request
-                } else {
-                    friendStatus = "received"; // They sent me a request
-                }
-            } else if (existingRequest.status === "rejected") {
-                friendStatus = "rejected";
-            }
-        }
-
-        res.render("profile/show", {
-            profileUser,
-            user: sessionUser,
-            dbError: false,
-            friendStatus
-        });
+        const profileUser = await User.findOne({ username: req.params.username }).populate("friends", "username fullName avatar");
+        if (!profileUser) return res.status(404).send("Uživatel nenalezen.");
+        const currentUser = await User.findById(req.session.user.id).populate("friends", "_id");
+        const wallPosts = await WallPost.find({ profile: profileUser._id })
+            .populate("author", "username fullName avatar")
+            .sort({ createdAt: -1 });
+        // Mutual friends: intersection of both friends arrays
+        const myFriendIds = new Set((currentUser.friends || []).map(f => f._id.toString()));
+        const mutualCount = (profileUser.friends || []).filter(f => myFriendIds.has(f._id.toString())).length;
+        res.render("profile/show", { profileUser, user: currentUser, wallPosts, mutualCount, dbError: false });
     } catch (error) {
         console.error(error);
         res.status(500).send("Chyba při načítání profilu.");
-    }
-};
-
-// Quick search
-exports.searchProfile = async (req, res) => {
-    if (!isConnected()) {
-        return res.render("profile/searchresult", { results: [], query: "", user: null, dbError: true });
-    }
-    try {
-        const query = (req.query.q || "").trim();
-        const sessionUser = await User.findById(req.session.user.id);
-
-        if (!query) {
-            return res.redirect("/profile");
-        }
-
-        const results = await User.find({
-            $or: [
-                { username: { $regex: query, $options: "i" } },
-                { fullName: { $regex: query, $options: "i" } }
-            ]
-        }).select("username fullName avatar college");
-
-        res.render("profile/searchresult", { results, query, user: sessionUser, dbError: false });
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Chyba při hledání.");
     }
 };
 
 exports.getEditProfile = async (req, res) => {
-    if (!isConnected()) {
-        return res.redirect("/profile");
-    }
+    if (!isConnected()) return res.redirect("/profile");
     try {
         const user = await User.findById(req.session.user.id);
         if (!user) return res.redirect("/login");
@@ -121,48 +69,68 @@ exports.getEditProfile = async (req, res) => {
 };
 
 exports.updateProfile = async (req, res) => {
-    if (!isConnected()) {
-        return res.status(503).send("Databáze není připojena.");
-    }
+    if (!isConnected()) return res.status(503).send("Databáze není připojena.");
     try {
-        const {
-            fullName, accessLocation, college, status, sex, residence,
-            birthday, hometown, highSchool, screenname, mobile,
-            websites, lookingFor, interestedIn, relationshipStatus,
-            politicalViews, interests, favoriteMusic, favoriteMovies, bio
-        } = req.body;
+        const fields = [
+            "fullName", "accessLocation", "college", "status", "sex", "residence",
+            "birthday", "hometown", "highSchool", "screenname", "mobile",
+            "websites", "lookingFor", "interestedIn", "relationshipStatus",
+            "politicalViews", "interests", "favoriteMusic", "favoriteMovies", "bio"
+        ];
+        const updateData = {};
+        fields.forEach(f => updateData[f] = req.body[f] || "");
+        if (req.file) updateData.avatar = "/uploads/" + req.file.filename;
 
-        const updateData = {
-            fullName: fullName || "",
-            accessLocation: accessLocation || "",
-            college: college || "",
-            status: status || "",
-            sex: sex || "",
-            residence: residence || "",
-            birthday: birthday || "",
-            hometown: hometown || "",
-            highSchool: highSchool || "",
-            screenname: screenname || "",
-            mobile: mobile || "",
-            websites: websites || "",
-            lookingFor: lookingFor || "",
-            interestedIn: interestedIn || "",
-            relationshipStatus: relationshipStatus || "",
-            politicalViews: politicalViews || "",
-            interests: interests || "",
-            favoriteMusic: favoriteMusic || "",
-            favoriteMovies: favoriteMovies || "",
-            bio: bio || ""
-        };
-
-        if (req.file) {
-            updateData.avatar = "/uploads/" + req.file.filename;
-        }
+        const oldUser = await User.findById(req.session.user.id);
 
         await User.findByIdAndUpdate(req.session.user.id, updateData, { new: true });
+
+        // Create activity events for changed tracked fields
+        for (const [field, eventType] of Object.entries(TRACKED_FIELDS)) {
+            const oldVal = (oldUser[field] || "").trim();
+            const newVal = (updateData[field] || "").trim();
+            if (newVal && newVal !== oldVal) {
+                await ActivityEvent.create({
+                    actor: req.session.user.id,
+                    type: eventType,
+                    meta: { field, newValue: newVal }
+                });
+            }
+        }
+
         res.redirect("/profile");
     } catch (error) {
         console.error(error);
         res.status(500).send("Chyba při aktualizaci profilu.");
+    }
+};
+
+exports.postWall = async (req, res) => {
+    if (!isConnected()) return res.status(503).send("Databáze není připojena.");
+    try {
+        const { content, profileUserId } = req.body;
+        if (!content || !content.trim()) return res.redirect("back");
+        const wallPost = await WallPost.create({
+            profile: profileUserId,
+            author: req.session.user.id,
+            content: content.trim()
+        });
+        // Find profile owner username for meta
+        const profileOwner = await User.findById(profileUserId, "username");
+        await ActivityEvent.create({
+            actor: req.session.user.id,
+            type: "wall_post",
+            meta: { wallTargetUsername: profileOwner ? profileOwner.username : "" }
+        });
+        // Redirect back to the profile
+        const profileUser = await User.findById(profileUserId, "username");
+        if (profileUser) {
+            res.redirect("/profile/" + profileUser.username);
+        } else {
+            res.redirect("/profile");
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Chyba při odesílání zprávy na zeď.");
     }
 };

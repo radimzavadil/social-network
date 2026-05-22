@@ -3,13 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Feed – thefacebook</title>
     <style>
         body.feed-page {
-            background-color: #ffffff !important;
+            background-color: #ffffff;
             font-family: "Lucida Grande", Tahoma, Verdana, Arial, sans-serif;
-            color: #111111;
+            color: #111;
             margin: 0;
             padding: 0;
         }
@@ -26,23 +25,25 @@
         }
 
         .avatar-square {
-            width: 65px;
-            height: 65px;
+            width: 48px;
+            height: 48px;
             border-radius: 6px;
             object-fit: cover;
-            border: 1px solid #cccccc;
+            border: 1px solid #ccc;
+            flex-shrink: 0;
         }
 
         .avatar-placeholder {
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #eceff5;
+            background: #eceff5;
             color: #3b5998;
             font-weight: bold;
-            font-size: 24px;
+            font-size: 18px;
         }
 
+        /* Composer */
         .composer-section {
             display: flex;
             gap: 15px;
@@ -51,14 +52,14 @@
         }
 
         .composer-card {
-            background-color: #f2f2f2;
+            background: #f2f2f2;
             padding: 12px;
-            border: 1px solid #cccccc;
+            border: 1px solid #ccc;
             flex-grow: 1;
         }
 
         .composer-header-text {
-            color: #777777;
+            color: #777;
             font-weight: bold;
             font-size: 14px;
             margin-bottom: 8px;
@@ -76,12 +77,11 @@
             padding: 5px 8px;
             font-family: inherit;
             font-size: 15px;
-            box-sizing: border-box;
         }
 
         .share-btn {
-            background-color: #3b5998;
-            color: #ffffff;
+            background: #3b5998;
+            color: #fff;
             border: 1px solid #29447e;
             font-weight: bold;
             padding: 0 16px;
@@ -91,32 +91,21 @@
         }
 
         .share-btn:hover {
-            background-color: #4c66a4;
+            background: #4c66a4;
         }
 
-        .posts-list {
-            background: transparent;
-        }
-
+        /* Normal post */
         .post-card {
             display: flex;
             gap: 15px;
             padding: 18px 0;
-            border: none !important;
-            box-shadow: none !important;
-            background: transparent !important;
         }
 
         .post-content-area {
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
             font-size: 15px;
             line-height: 1.4;
-        }
-
-        .post-main-text {
-            margin-bottom: 6px;
         }
 
         .post-author-name {
@@ -130,23 +119,10 @@
             text-decoration: underline;
         }
 
-        .post-body {
-            color: #111111;
-            word-break: break-word;
-        }
-
         .post-meta {
             font-size: 12px;
-            color: #777777;
-        }
-
-        .post-meta a {
-            color: #3b5998;
-            text-decoration: none;
-        }
-
-        .post-meta a:hover {
-            text-decoration: underline;
+            color: #777;
+            margin-top: 4px;
         }
 
         .post-divider {
@@ -156,19 +132,74 @@
             margin: 0;
         }
 
-        .empty-feed {
-            text-align: center;
-            color: #777777;
-            padding: 30px 0;
-            font-size: 15px;
+        /* Activity event — smaller */
+        .activity-card {
+            display: flex;
+            gap: 10px;
+            padding: 10px 0;
+            align-items: center;
         }
 
-        .alert-error {
-            margin-bottom: 15px;
-            padding: 10px;
-            background: #fff0f0;
-            border: 1px solid #ffcccc;
-            color: #cc0000;
+        .activity-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            object-fit: cover;
+            border: 1px solid #ccc;
+            flex-shrink: 0;
+        }
+
+        .activity-avatar-ph {
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #eceff5;
+            color: #3b5998;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .activity-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.6;
+            flex-shrink: 0;
+        }
+
+        .activity-text {
+            font-size: 12px;
+            color: #555;
+            line-height: 1.4;
+        }
+
+        .activity-text a {
+            color: #3b5998;
+            text-decoration: none;
+        }
+
+        .activity-text a:hover {
+            text-decoration: underline;
+        }
+
+        .activity-text strong {
+            color: #222;
+        }
+
+        .activity-time {
+            font-size: 11px;
+            color: #999;
+            margin-top: 2px;
+        }
+
+        .empty-feed {
+            text-align: center;
+            color: #777;
+            padding: 30px 0;
+            font-size: 15px;
         }
     </style>
 </head>
@@ -177,76 +208,116 @@
 
     <%- include('../partials/nav', { activePage: 'feed' }) %>
 
-    <div class="page-wrapper">
-        <div class="feed-container">
+        <div class="page-wrapper">
+            <div class="feed-container">
 
-            <% if (locals.dbError) { %>
-            <div class="alert-error">
-                <strong>⚠ Databáze není připojena.</strong> Příspěvky nelze načíst ani ukládat.
-            </div>
-            <% } %>
-
-            <div class="composer-section">
-                <div class="composer-avatar">
-                    <% if (currentUser && currentUser.avatar) { %>
-                    <img src="<%= currentUser.avatar %>" alt="Avatar" class="avatar-square">
-                    <% } else { %>
-                    <div class="avatar-square avatar-placeholder">
-                        <%= currentUser ? currentUser.username.charAt(0).toUpperCase() : '?' %>
+                <% if (locals.dbError) { %>
+                    <div
+                        style="margin-bottom:15px;padding:10px;background:#fff0f0;border:1px solid #ffcccc;color:#cc0000;">
+                        <strong>⚠ Databáze není připojena.</strong>
                     </div>
                     <% } %>
-                </div>
 
-                <div class="composer-card">
-                    <div class="composer-header-text">What's on your mind?</div>
-                    <form action="/feed" method="POST" class="composer-form">
-                        <input type="text" name="content" class="composer-textarea" autocomplete="off" />
-                        <button type="submit" class="share-btn">Sdílet</button>
-                    </form>
-                </div>
-            </div>
-
-            <div class="posts-list">
-                <% if (posts.length === 0) { %>
-                <div class="empty-feed">
-                    <p>Zatím žádné příspěvky. Buď první!</p>
-                </div>
-                <% } %>
-
-                <% posts.forEach((post, index) => { %>
-                <div class="post-card">
-                    <div class="post-avatar">
-                        <a href="/profile/<%= post.author.username %>">
-                            <% if (post.author.avatar) { %>
-                            <img src="<%= post.author.avatar %>" alt="Avatar" class="avatar-square">
-                            <% } else { %>
-                            <div class="avatar-square avatar-placeholder">
-                                <%= post.author.username.charAt(0).toUpperCase() %>
+                        <div class="composer-section">
+                            <div>
+                                <% if (currentUser && currentUser.avatar) { %>
+                                    <img src="<%= currentUser.avatar %>" alt="Avatar" class="avatar-square">
+                                    <% } else { %>
+                                        <div class="avatar-square avatar-placeholder">
+                                            <%= currentUser ? currentUser.username.charAt(0).toUpperCase() : '?' %>
+                                        </div>
+                                        <% } %>
                             </div>
-                            <% } %>
-                        </a>
-                    </div>
-                    <div class="post-content-area">
-                        <div class="post-main-text">
-                            <a href="/profile/<%= post.author.username %>" class="post-author-name">
-                                <%= post.author.fullName && post.author.fullName.trim() ? post.author.fullName : post.author.username %>
-                            </a>
-                            <span class="post-body"><%= post.content %></span>
+                            <div class="composer-card">
+                                <div class="composer-header-text">What's on your mind?</div>
+                                <form action="/feed" method="POST" class="composer-form">
+                                    <input type="text" name="content" class="composer-textarea" autocomplete="off" />
+                                    <button type="submit" class="share-btn">Sdílet</button>
+                                </form>
+                            </div>
                         </div>
-                        <div class="post-meta">
-                            <span class="post-time"><%= timeAgo(post.createdAt) %></span>
-                            <span class="post-actions"> · <a href="#">Comment</a> · <a href="#">Like</a></span>
-                        </div>
-                    </div>
-                </div>
-                <% if (index < posts.length - 1) { %>
-                <hr class="post-divider">
-                <% } %>
-                <% }) %>
-            </div>
 
+                        <div class="posts-list">
+                            <% if (feedItems.length===0) { %>
+                                <div class="empty-feed">
+                                    <p>Zatím žádné příspěvky. Buď první!</p>
+                                </div>
+                                <% } %>
+
+                                    <% feedItems.forEach((item, index)=> {
+                                        const isLast = index === feedItems.length - 1;
+                                        %>
+                                        <% if (item.kind==='post' ) { const post=item.data; %>
+                                            <div class="post-card">
+                                                <div>
+                                                    <% if (post.author.avatar) { %>
+                                                        <img src="<%= post.author.avatar %>" alt="Avatar"
+                                                            class="avatar-square">
+                                                        <% } else { %>
+                                                            <div class="avatar-square avatar-placeholder">
+                                                                <%= post.author.username.charAt(0).toUpperCase() %>
+                                                            </div>
+                                                            <% } %>
+                                                </div>
+                                                <div class="post-content-area">
+                                                    <div>
+                                                        <a href="/profile/<%= post.author.username %>"
+                                                            class="post-author-name">
+                                                            <%= post.author.fullName && post.author.fullName.trim() ?
+                                                                post.author.fullName : post.author.username %>
+                                                        </a>
+                                                        <span>
+                                                            <%= post.content %>
+                                                        </span>
+                                                    </div>
+                                                    <div class="post-meta">
+                                                        <%= timeAgo(post.createdAt) %>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <% } else { const ev=item.data; const actor=ev.actor; const meta=ev.meta ||
+                                                {}; let iconSrc='/edit.svg' ; let activityHtml='' ; if
+                                                (ev.type==='birthday_edit' ) { iconSrc='/calendar.svg' ;
+                                                activityHtml=`<strong>${actor.fullName || actor.username}</strong>
+                                                updated their Birthday to <strong>${meta.newValue}</strong>.`;
+                                                } else if (ev.type === 'wall_post') {
+                                                iconSrc = '/add-wall.svg';
+                                                activityHtml = `<strong>${actor.fullName || actor.username}</strong>
+                                                wrote on <a
+                                                    href="/profile/${meta.wallTargetUsername}">${meta.wallTargetUsername}</a>'s
+                                                wall.`;
+                                                } else if (ev.type === 'friend_added') {
+                                                iconSrc = '/add-friend.svg';
+                                                activityHtml = `<strong>${actor.fullName || actor.username}</strong> and
+                                                <a href="/profile/${meta.friendUsername}">${meta.friendUsername}</a> are
+                                                now friends.`;
+                                                } else {
+                                                // profile_edit
+                                                const label = FIELD_LABELS[meta.field] || meta.field;
+                                                activityHtml = `<strong>${actor.fullName || actor.username}</strong>
+                                                changed their ${label} to <strong>${meta.newValue}</strong>.`;
+                                                }
+                                                %>
+                                                <div class="activity-card">
+                                                    <img src="<%= iconSrc %>" class="activity-icon" alt="">
+                                                    <div>
+                                                        <div class="activity-text"><%- activityHtml %></div>
+                                                        <div class="activity-time">
+                                                            <%= timeAgo(ev.createdAt) %>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <% } %>
+
+                                                    <% if (!isLast) { %>
+                                                        <hr class="post-divider">
+                                                        <% } %>
+                                                            <% }) %>
+                        </div>
+
+            </div>
         </div>
-    </div>
 </body>
 
 </html>

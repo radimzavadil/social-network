@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" id="calendar">
+  <defs>
+    <linearGradient id="c" x1="38.5" x2="38.5" y1="217.018" y2="219.834" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient id="b" x1="39.176" x2="36.675" y1="221.195" y2="231.882" gradientUnits="userSpaceOnUse"></linearGradient>
+    <filter id="a" width="1.3" height="2.501" x="-.15" y="-.751">
+      <feGaussianBlur stdDeviation=".915"></feGaussianBlur>
+    </filter>
+  </defs>
+  <g transform="translate(-102.353 -756.85)scale(3.52941)">
+    <path d="M31 228h14.63v2.926H31z" style="opacity:1;fill:#000;fill-opacity:1;fill-rule:nonzero;stroke:#795e5e;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#a)" transform="matrix(1.02532 0 0 1.03039 -.785 -6.928)"></path>
+    <path d="M31.5 216.5v11c0 1.331-1.103 3-2 3h14c1.16 0 2-1.625 2-3v-11h-14z" style="fill:url(#b);fill-opacity:1;fill-rule:evenodd;stroke:#795e5e;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"></path>
+    <path d="M31.5 216.5h14v4h-14v-4z" style="fill:url(#c);fill-opacity:1;fill-rule:evenodd;stroke:#8f0000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"></path>
+    <rect width="13" height="1" x="32" y="220" rx="0" ry="0" style="opacity:1;fill:#bb3737;fill-opacity:1;fill-rule:nonzero;stroke:#800;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"></rect>
+    <rect width="1" height="1" x="31" y="220" rx="0" ry="0" style="opacity:1;fill:#8f0000;fill-opacity:1;fill-rule:nonzero;stroke:#a00;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"></rect>
+    <rect width="1" height="1" x="45" y="220" rx="0" ry="0" style="opacity:1;fill:#8f0000;fill-opacity:1;fill-rule:nonzero;stroke:#a00;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"></rect>
+  </g>
+</svg>

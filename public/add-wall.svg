@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" id="facebook">
+  <g transform="matrix(1.74845 0 0 1.74119 -490.734 -380.847)">
+    <rect width="35.604" height="28.748" x="-316.771" y="219.229" fill="#7a8fb9" stroke="#3b5998" stroke-linecap="round" stroke-linejoin="round" rx="3.81" ry="3.58" transform="scale(-1 1)"></rect>
+    <g fill-rule="evenodd" stroke-width=".584">
+      <path fill="#d6ddea" stroke="#6e85b5" d="M295.762 241.811h16.416v-2.325c0-1.74-6.832-.595-4.95-7.556 2.354-8.714-8.24-8.713-5.885 0 1.883 6.968-5.581 5.789-5.581 7.556v2.325z"></path>
+      <path fill="#fff" stroke="#7388b3" d="M285.762 241.811h16.416v-2.325c0-1.74-6.832-.595-4.95-7.556 2.354-8.714-8.24-8.713-5.885 0 1.883 6.968-5.581 5.789-5.581 7.556v2.325z"></path>
+    </g>
+    <path fill="#3b5998" fill-rule="evenodd" stroke="#3b5998" stroke-linejoin="round" d="M309.02 248.114v6.871l-9.847-6.87h9.847z"></path>
+    <path fill="#7a8fb9" fill-rule="evenodd" stroke="#7a8fb9" stroke-width="2.457" d="M306.631 243.488v6.87l-9.846-6.87h9.846z"></path>
+  </g>
+</svg>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" id="edit">
+  <defs>
+    <linearGradient id="a" x1="173" x2="173" y1="134" y2="127.722" gradientUnits="userSpaceOnUse"></linearGradient>
+  </defs>
+  <path fill="none" stroke="#899cc1" stroke-width="3.878" d="M2.917 46.55v15.511h19.39V46.55v15.511h19.388V46.55v15.511h19.389V46.55"></path>
+  <path fill="none" stroke="url(#a)" d="M165.5 129.5v4h5v-4 4h5v-4 4h5v-4" transform="translate(-638.852 -486.642)scale(3.87776)"></path>
+  <g fill-rule="evenodd">
+    <path fill="#c9b799" stroke="#ad8d55" stroke-linejoin="round" stroke-width="1.888" d="M10.146 50.949h15.107L10.146 35.842v15.107z"></path>
+    <path stroke="#000" stroke-width=".615" d="M9.51 51.586h4.917l-4.918-4.917v4.917z"></path>
+  </g>
+  <path fill="#f8b135" stroke="#8b5800" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.49" d="M45.322 1.748 59.356 15.78 24.51 50.626 10.477 36.593z"></path>
+</svg>
