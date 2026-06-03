@@ -6,8 +6,15 @@ const upload = require("../config/multer");
 
 router.get("/", requireLogin, profileController.getProfile);
 router.get("/edit", requireLogin, profileController.getEditProfile);
-router.post("/edit", requireLogin, upload.single("avatar"), profileController.updateProfile);
+router.post(
+  "/edit",
+  requireLogin,
+  upload.single("avatar"),
+  profileController.updateProfile,
+);
 router.post("/wall", requireLogin, profileController.postWall);
+router.put("/wall/:id", requireLogin, profileController.updateWallPost);
+router.delete("/wall/:id", requireLogin, profileController.deleteWallPost);
 router.get("/:username", requireLogin, profileController.getProfileByUsername);
 
 module.exports = router;

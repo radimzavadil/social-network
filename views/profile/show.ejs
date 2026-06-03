@@ -382,6 +382,72 @@
             text-decoration: underline !important;
             color: #64748b !important;
         }
+
+        /* Wall Actions */
+        .wall-item {
+            position: relative;
+        }
+
+        .wall-item:hover .wall-actions {
+            display: flex;
+        }
+
+        .wall-actions {
+            position: absolute;
+            top: 10px;
+            right: 0;
+            display: none;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 2px 5px;
+        }
+
+        .action-icon {
+            width: 12px;
+            height: 12px;
+            cursor: pointer;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+
+        .action-icon:hover {
+            opacity: 1;
+        }
+
+        .edit-form {
+            display: none;
+            margin-top: 5px;
+            width: 100%;
+        }
+
+        .edit-input {
+            width: 100%;
+            border: 1px solid #7f9db9;
+            padding: 2px 5px;
+            font-size: 12px;
+            font-family: inherit;
+            margin-bottom: 4px;
+        }
+
+        .edit-save-btn {
+            background: #3b5998;
+            color: #fff;
+            border: 1px solid #29447e;
+            font-size: 11px;
+            padding: 2px 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .edit-cancel-btn {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #7f9db9;
+            font-size: 11px;
+            padding: 2px 6px;
+            cursor: pointer;
+            margin-left: 4px;
+        }
     </style>
 </head>
 
@@ -849,8 +915,22 @@
 
                                     <% if (wallPosts && wallPosts.length> 0) { %>
                                         <% wallPosts.forEach(function(wp) { %>
-                                            <div
+                                            <div class="wall-item"
                                                 style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #e5e5e5;">
+
+                                                <% if (typeof user !== 'undefined' && user && (wp.author._id.toString() === user._id.toString() || profileUser._id.toString() === user._id.toString() || user.role === 'admin')) { %>
+                                                    <div class="wall-actions">
+                                                        <% if (wp.author._id.toString() === user._id.toString()) { %>
+                                                            <img src="/edit.svg" class="action-icon" onclick="toggleEdit('<%= wp._id %>')" title="Upravit">
+                                                        <% } %>
+                                                        <form action="/profile/wall/<%= wp._id %>?_method=DELETE" method="POST" onsubmit="return confirm('Opravdu smazat?')">
+                                                            <button type="submit" style="background:none; border:none; padding:0; cursor:pointer;">
+                                                                <span style="color:#cc0000; font-weight:bold; font-size:14px; line-height:10px;">&times;</span>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                <% } %>
+
                                                 <div style="flex-shrink:0;">
                                                     <% if (wp.author.avatar) { %>
                                                         <img src="<%= wp.author.avatar %>" alt=""
@@ -863,7 +943,7 @@
                                                             <% } %>
                                                 </div>
                                                 <div style="flex:1;">
-                                                    <div style="font-size:13px;">
+                                                    <div id="view-<%= wp._id %>" style="font-size:13px;">
                                                         <a href="/profile/<%= wp.author.username %>"
                                                             style="color:#3b5998;text-decoration:none;font-weight:bold;">
                                                             <%= wp.author.fullName && wp.author.fullName.trim() ?
@@ -873,6 +953,15 @@
                                                             <%= wp.content %>
                                                         </span>
                                                     </div>
+
+                                                    <% if (typeof user !== 'undefined' && user && wp.author._id.toString() === user._id.toString()) { %>
+                                                        <form action="/profile/wall/<%= wp._id %>?_method=PUT" method="POST" class="edit-form" id="edit-form-<%= wp._id %>">
+                                                            <input type="text" name="content" class="edit-input" value="<%= wp.content %>" required>
+                                                            <button type="submit" class="edit-save-btn">Uložit</button>
+                                                            <button type="button" class="edit-cancel-btn" onclick="toggleEdit('<%= wp._id %>')">Zrušit</button>
+                                                        </form>
+                                                    <% } %>
+
                                                     <div style="font-size:11px;color:#999;margin-top:3px;">
                                                         <%= new
                                                             Date(wp.createdAt).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})
@@ -893,5 +982,21 @@
                 </div>
             </div>
 </body>
+
+<script>
+    function toggleEdit(postId) {
+        const viewDiv = document.getElementById('view-' + postId);
+        const editForm = document.getElementById('edit-form-' + postId);
+
+        if (viewDiv.style.display === 'none') {
+            viewDiv.style.display = 'block';
+            editForm.style.display = 'none';
+        } else {
+            viewDiv.style.display = 'none';
+            editForm.style.display = 'block';
+            editForm.querySelector('input').focus();
+        }
+    }
+</script>
 
 </html>
