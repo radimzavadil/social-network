@@ -545,8 +545,13 @@
                                 </div>
 
                                 <div class="action-buttons-box">
-                                    <a href="#" class="action-link">Send <%= profileUser.username %> a Message</a>
-                                    <a href="#" class="action-link">Poke Him!</a>
+                                    <% if (!isOwnProfile) { %>
+                                        <form action="/profile/wall" method="POST" style="display:none;" id="poke-form">
+                                            <input type="hidden" name="profileUserId" value="<%= profileUser._id %>">
+                                            <input type="hidden" name="content" value="poked you!">
+                                        </form>
+                                        <a href="#" class="action-link" onclick="document.getElementById('poke-form').submit(); return false;">Poke Him!</a>
+                                    <% } %>
                                 </div>
 
                                 <% if (isOwnProfile) { %>
