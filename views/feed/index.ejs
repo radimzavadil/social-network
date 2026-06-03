@@ -266,6 +266,32 @@
             cursor: pointer;
             margin-left: 5px;
         }
+
+        /* Image Upload */
+        .image-upload-label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .image-upload-label:hover {
+            opacity: 1;
+        }
+
+        .image-upload-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .post-image {
+            max-width: 100%;
+            max-height: 400px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            display: block;
+        }
     </style>
 </head>
 
@@ -295,8 +321,12 @@
                             </div>
                             <div class="composer-card">
                                 <div class="composer-header-text">What's on your mind?</div>
-                                <form action="/feed" method="POST" class="composer-form">
+                                <form action="/feed" method="POST" class="composer-form" enctype="multipart/form-data">
                                     <input type="text" name="content" class="composer-textarea" autocomplete="off" />
+                                    <label class="image-upload-label" title="Přidat obrázek">
+                                        <img src="/image-icon.svg" class="image-upload-icon" alt="">
+                                        <input type="file" name="image" accept="image/*" style="display:none;">
+                                    </label>
                                     <button type="submit" class="share-btn">Sdílet</button>
                                 </form>
                             </div>
@@ -346,13 +376,22 @@
                                                         <span class="post-text">
                                                             <%= post.content %>
                                                         </span>
+                                                        <% if (post.image) { %>
+                                                            <img src="<%= post.image %>" class="post-image" alt="">
+                                                        <% } %>
                                                     </div>
 
                                                     <% if (currentUser && post.author._id.toString() === currentUser._id.toString()) { %>
-                                                        <form action="/feed/<%= post._id %>?_method=PUT" method="POST" class="edit-form" id="edit-form-<%= post._id %>">
+                                                        <form action="/feed/<%= post._id %>?_method=PUT" method="POST" class="edit-form" id="edit-form-<%= post._id %>" enctype="multipart/form-data">
                                                             <input type="text" name="content" class="edit-input" value="<%= post.content %>" required>
-                                                            <button type="submit" class="edit-save-btn">Uložit</button>
-                                                            <button type="button" class="edit-cancel-btn" onclick="toggleEdit('<%= post._id %>')">Zrušit</button>
+                                                            <div style="display:flex; gap:10px; align-items:center; margin-bottom:5px;">
+                                                                <label class="image-upload-label" title="Změnit obrázek">
+                                                                    <img src="/image-icon.svg" class="image-upload-icon" alt="">
+                                                                    <input type="file" name="image" accept="image/*" style="display:none;">
+                                                                </label>
+                                                                <button type="submit" class="edit-save-btn">Uložit</button>
+                                                                <button type="button" class="edit-cancel-btn" onclick="toggleEdit('<%= post._id %>')">Zrušit</button>
+                                                            </div>
                                                         </form>
                                                     <% } %>
 

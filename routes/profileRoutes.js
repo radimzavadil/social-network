@@ -12,8 +12,18 @@ router.post(
   upload.single("avatar"),
   profileController.updateProfile,
 );
-router.post("/wall", requireLogin, profileController.postWall);
-router.put("/wall/:id", requireLogin, profileController.updateWallPost);
+router.post(
+  "/wall",
+  requireLogin,
+  upload.single("image"),
+  profileController.postWall,
+);
+router.put(
+  "/wall/:id",
+  requireLogin,
+  upload.single("image"),
+  profileController.updateWallPost,
+);
 router.delete("/wall/:id", requireLogin, profileController.deleteWallPost);
 router.get("/:username", requireLogin, profileController.getProfileByUsername);
 

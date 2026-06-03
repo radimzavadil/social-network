@@ -92,7 +92,17 @@ exports.createPost = async (req, res) => {
   try {
     const { content } = req.body;
     if (!content || !content.trim()) return res.redirect("/feed");
-    await Post.create({ author: req.session.user.id, content: content.trim() });
+
+    const postData = {
+      author: req.session.user.id,
+      content: content.trim(),
+    };
+
+    if (req.file) {
+      postData.image = "/uploads/" + req.file.filename;
+    }
+
+    await Post.create(postData);
     res.redirect("/feed");
   } catch (error) {
     console.error(error);
@@ -113,9 +123,14 @@ exports.updatePost = async (req, res) => {
       return res.status(403).send("Nejste autorem tohoto příspěvku.");
     }
 
-    if (!content || !content.trim()) return res.redirect("/feed");
+    if (content && content.trim()) {
+      post.content = content.trim();
+    }
 
-    post.content = content.trim();
+    if (req.file) {
+      post.image = "/uploads/" + req.file.filename;
+    }
+
     await post.save();
 
     res.redirect("/feed");

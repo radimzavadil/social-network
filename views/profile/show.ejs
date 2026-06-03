@@ -448,6 +448,33 @@
             cursor: pointer;
             margin-left: 4px;
         }
+
+        /* Image Upload */
+        .image-upload-label {
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+            vertical-align: middle;
+        }
+
+        .image-upload-label:hover {
+            opacity: 1;
+        }
+
+        .image-upload-icon {
+            width: 18px;
+            height: 18px;
+        }
+
+        .post-image {
+            max-width: 100%;
+            max-height: 300px;
+            margin-top: 8px;
+            border: 1px solid #ddd;
+            display: block;
+        }
     </style>
 </head>
 
@@ -901,12 +928,16 @@
                             <div class="info-container" style="margin-top:20px;">
                                 <div class="info-box-hd"><span>Wall</span></div>
                                 <div class="info-section">
-                                    <form action="/profile/wall" method="POST"
-                                        style="display:flex;gap:8px;margin-bottom:18px;">
+                                    <form action="/profile/wall" method="POST" enctype="multipart/form-data"
+                                        style="display:flex;gap:8px;margin-bottom:18px;align-items:center;">
                                         <input type="hidden" name="profileUserId" value="<%= profileUser._id %>">
                                         <input type="text" name="content"
                                             placeholder="Write on <%= profileUser.username %>'s wall..."
                                             style="flex:1;height:28px;border:1px solid #7f9db9;padding:3px 8px;font-size:13px;font-family:inherit;">
+                                        <label class="image-upload-label" title="Přidat obrázek">
+                                            <img src="/image-icon.svg" class="image-upload-icon" alt="">
+                                            <input type="file" name="image" accept="image/*" style="display:none;">
+                                        </label>
                                         <button type="submit"
                                             style="background:#3b5998;color:#fff;border:1px solid #29447e;font-size:13px;padding:4px 14px;cursor:pointer;font-weight:bold;">
                                             Post
@@ -952,13 +983,22 @@
                                                         <span style="color:#111;margin-left:4px;">
                                                             <%= wp.content %>
                                                         </span>
+                                                        <% if (wp.image) { %>
+                                                            <img src="<%= wp.image %>" class="post-image" alt="">
+                                                        <% } %>
                                                     </div>
 
                                                     <% if (typeof user !== 'undefined' && user && wp.author._id.toString() === user._id.toString()) { %>
-                                                        <form action="/profile/wall/<%= wp._id %>?_method=PUT" method="POST" class="edit-form" id="edit-form-<%= wp._id %>">
+                                                        <form action="/profile/wall/<%= wp._id %>?_method=PUT" method="POST" class="edit-form" id="edit-form-<%= wp._id %>" enctype="multipart/form-data">
                                                             <input type="text" name="content" class="edit-input" value="<%= wp.content %>" required>
-                                                            <button type="submit" class="edit-save-btn">Uložit</button>
-                                                            <button type="button" class="edit-cancel-btn" onclick="toggleEdit('<%= wp._id %>')">Zrušit</button>
+                                                            <div style="display:flex; gap:10px; align-items:center;">
+                                                                <label class="image-upload-label" title="Změnit obrázek">
+                                                                    <img src="/image-icon.svg" class="image-upload-icon" alt="">
+                                                                    <input type="file" name="image" accept="image/*" style="display:none;">
+                                                                </label>
+                                                                <button type="submit" class="edit-save-btn">Uložit</button>
+                                                                <button type="button" class="edit-cancel-btn" onclick="toggleEdit('<%= wp._id %>')">Zrušit</button>
+                                                            </div>
                                                         </form>
                                                     <% } %>
 

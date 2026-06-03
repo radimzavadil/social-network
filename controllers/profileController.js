@@ -164,11 +164,19 @@ exports.postWall = async (req, res) => {
   try {
     const { content, profileUserId } = req.body;
     if (!content || !content.trim()) return res.redirect("back");
-    const wallPost = await WallPost.create({
+
+    const wpData = {
       profile: profileUserId,
       author: req.session.user.id,
       content: content.trim(),
-    });
+    };
+
+    if (req.file) {
+      wpData.image = "/uploads/" + req.file.filename;
+    }
+
+    await WallPost.create(wpData);
+
     // Find profile owner username for meta
     const profileOwner = await User.findById(profileUserId, "username");
     await ActivityEvent.create({
@@ -205,8 +213,13 @@ exports.updateWallPost = async (req, res) => {
 
     if (content && content.trim()) {
       wp.content = content.trim();
-      await wp.save();
     }
+
+    if (req.file) {
+      wp.image = "/uploads/" + req.file.filename;
+    }
+
+    await wp.save();
 
     res.redirect("/profile/" + wp.profile.username);
   } catch (error) {
