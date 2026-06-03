@@ -5,6 +5,7 @@ const requireLogin = require("../middlewares/authMiddleware");
 const upload = require("../config/multer");
 
 router.get("/", requireLogin, profileController.getProfile);
+router.get("/search", requireLogin, profileController.searchUsers);
 router.get("/edit", requireLogin, profileController.getEditProfile);
 router.post(
   "/edit",

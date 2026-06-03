@@ -32,16 +32,18 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(methodOverride("_method"));
 
 // Session
-app.use(session({
+app.use(
+  session({
     secret: process.env.SESSION_SECRET || "tajny-klic-123",
     resave: false,
-    saveUninitialized: false
-}));
+    saveUninitialized: false,
+  }),
+);
 
 // Make session user available in all views
 app.use((req, res, next) => {
-    res.locals.user = req.session.user || null;
-    next();
+  res.locals.user = req.session.user || null;
+  next();
 });
 
 // Routes
@@ -53,12 +55,12 @@ app.use("/", authRoutes);
 
 // Home / Landing Page
 app.get("/", (req, res) => {
-    if (req.session.user) {
-        return res.redirect("/feed");
-    }
-    res.render("index");
+  if (req.session.user) {
+    return res.redirect("/feed");
+  }
+  res.render("index", { activePage: "about" });
 });
 
 app.listen(PORT, () => {
-    console.log(`Server běží na adrese http://localhost:${PORT}`);
+  console.log(`Server běží na adrese http://localhost:${PORT}`);
 });

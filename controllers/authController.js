@@ -5,12 +5,14 @@ const User = require("../models/User");
 const isConnected = () => mongoose.connection.readyState === 1;
 
 exports.showRegister = (req, res) => {
-  res.render("auth/register");
+  res.render("auth/register", { activePage: "register" });
 };
 
 exports.register = async (req, res) => {
   if (!isConnected()) {
-    return res.status(503).send("Databáze není připojena. Registrace je dočasně nedostupná.");
+    return res
+      .status(503)
+      .send("Databáze není připojena. Registrace je dočasně nedostupná.");
   }
   try {
     const { username, password } = req.body;
@@ -22,13 +24,13 @@ exports.register = async (req, res) => {
     const newUser = await User.create({
       username,
       password: hashedPassword,
-      role: "user"
+      role: "user",
     });
     // Auto-login after register and redirect to profile
     req.session.user = {
       id: newUser._id,
       username: newUser.username,
-      role: newUser.role
+      role: newUser.role,
     };
     res.redirect("/profile");
   } catch (error) {
@@ -37,12 +39,14 @@ exports.register = async (req, res) => {
 };
 
 exports.showLogin = (req, res) => {
-  res.render("auth/login");
+  res.render("auth/login", { activePage: "login" });
 };
 
 exports.login = async (req, res) => {
   if (!isConnected()) {
-    return res.status(503).send("Databáze není připojena. Přihlášení je dočasně nedostupné.");
+    return res
+      .status(503)
+      .send("Databáze není připojena. Přihlášení je dočasně nedostupné.");
   }
   try {
     const { username, password } = req.body;
@@ -57,7 +61,7 @@ exports.login = async (req, res) => {
     req.session.user = {
       id: user._id,
       username: user.username,
-      role: user.role
+      role: user.role,
     };
     // Redirect to profile page
     res.redirect("/profile");

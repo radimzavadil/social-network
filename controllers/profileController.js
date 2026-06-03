@@ -43,6 +43,7 @@ exports.getProfile = async (req, res) => {
       wallPosts,
       mutualCount: 0,
       dbError: false,
+      activePage: "profile",
     });
   } catch (error) {
     console.error(error);
@@ -85,6 +86,7 @@ exports.getProfileByUsername = async (req, res) => {
       wallPosts,
       mutualCount,
       dbError: false,
+      activePage: "profile",
     });
   } catch (error) {
     console.error(error);
@@ -97,7 +99,11 @@ exports.getEditProfile = async (req, res) => {
   try {
     const user = await User.findById(req.session.user.id);
     if (!user) return res.redirect("/login");
-    res.render("profile/edit", { profileUser: user, error: null });
+    res.render("profile/edit", {
+      profileUser: user,
+      error: null,
+      activePage: "profile",
+    });
   } catch (error) {
     console.error(error);
     res.status(500).send("Chyba.");
@@ -252,5 +258,31 @@ exports.deleteWallPost = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send("Chyba při mazání příspěvku.");
+  }
+};
+
+exports.searchUsers = async (req, res) => {
+  if (!isConnected()) return res.status(503).send("Databáze není připojena.");
+  try {
+    const query = (req.query.q || "").trim().toLowerCase();
+    if (!query) return res.redirect("back");
+
+    // Search by username or fullName (case-insensitive)
+    const users = await User.find({
+      $or: [
+        { username: { $regex: query, $options: "i" } },
+        { fullName: { $regex: query, $options: "i" } },
+      ],
+    }).select("username fullName avatar college residence");
+
+    res.render("profile/searchresult", {
+      users,
+      query,
+      user: req.session.user,
+      activePage: "profile",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Chyba při vyhledávání.");
   }
 };

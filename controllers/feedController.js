@@ -74,6 +74,7 @@ exports.getFeed = async (req, res) => {
       dbError: false,
       timeAgo,
       FIELD_LABELS,
+      activePage: "feed",
     });
   } catch (error) {
     console.error(error);
