@@ -499,7 +499,6 @@
                     <div class="nav-links-box">
                         <ul>
                             <li><a href="/profile/edit">My Profile [ edit ]</a></li>
-                            <li><a href="#">My Friends</a></li>
                             <li><a href="/friends/requests">Friend Requests</a></li>
                         </ul>
                     </div>
@@ -532,11 +531,15 @@
                                 <div class="box-bd">
                                     <div class="pic-wrap">
                                         <% if (profileUser.avatar) { %>
-                                            <img src="<%= profileUser.avatar %>" alt="<%= profileUser.username %>">
+                                            <a href="/profile/<%= profileUser.username %>">
+                                                <img src="<%= profileUser.avatar %>" alt="<%= profileUser.username %>">
+                                            </a>
                                             <% } else { %>
-                                                <div class="pic-empty">
-                                                    <span>No photo</span>
-                                                </div>
+                                                <a href="/profile/<%= profileUser.username %>" style="text-decoration:none; color:inherit;">
+                                                    <div class="pic-empty">
+                                                        <span>No photo</span>
+                                                    </div>
+                                                </a>
                                                 <% } %>
                                     </div>
                                 </div>
@@ -601,14 +604,16 @@
                                         <div class="friends-grid">
                                             <% profileUser.friends.forEach(function(friend) { %>
                                                 <div class="f-thumb">
-                                                    <% if (friend.avatar) { %>
-                                                        <img src="<%= friend.avatar %>" alt="<%= friend.username %>">
-                                                        <% } else { %>
-                                                            <div class="f-thumb-ph"></div>
-                                                            <% } %>
-                                                                <span class="f-name">
-                                                                    <%= friend.username %>
-                                                                </span>
+                                                    <a href="/profile/<%= friend.username %>">
+                                                        <% if (friend.avatar) { %>
+                                                            <img src="<%= friend.avatar %>" alt="<%= friend.username %>">
+                                                            <% } else { %>
+                                                                <div class="f-thumb-ph"></div>
+                                                                <% } %>
+                                                    </a>
+                                                    <a href="/profile/<%= friend.username %>" class="f-name" style="text-decoration:none;">
+                                                        <%= friend.username %>
+                                                    </a>
                                                 </div>
                                                 <% }) %>
                                         </div>
@@ -963,15 +968,17 @@
                                                 <% } %>
 
                                                 <div style="flex-shrink:0;">
-                                                    <% if (wp.author.avatar) { %>
-                                                        <img src="<%= wp.author.avatar %>" alt=""
-                                                            style="width:40px;height:40px;object-fit:cover;border:1px solid #ccc;border-radius:4px;">
-                                                        <% } else { %>
-                                                            <div
-                                                                style="width:40px;height:40px;background:#eceff5;border:1px solid #ccc;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#3b5998;font-size:16px;">
-                                                                <%= wp.author.username.charAt(0).toUpperCase() %>
-                                                            </div>
-                                                            <% } %>
+                                                    <a href="/profile/<%= wp.author.username %>">
+                                                        <% if (wp.author.avatar) { %>
+                                                            <img src="<%= wp.author.avatar %>" alt=""
+                                                                style="width:40px;height:40px;object-fit:cover;border:1px solid #ccc;border-radius:4px;">
+                                                            <% } else { %>
+                                                                <div
+                                                                    style="width:40px;height:40px;background:#eceff5;border:1px solid #ccc;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#3b5998;font-size:16px;">
+                                                                    <%= wp.author.username.charAt(0).toUpperCase() %>
+                                                                </div>
+                                                                <% } %>
+                                                    </a>
                                                 </div>
                                                 <div style="flex:1;">
                                                     <div id="view-<%= wp._id %>" style="font-size:13px;">

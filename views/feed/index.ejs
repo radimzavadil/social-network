@@ -311,13 +311,15 @@
 
                         <div class="composer-section">
                             <div>
-                                <% if (currentUser && currentUser.avatar) { %>
-                                    <img src="<%= currentUser.avatar %>" alt="Avatar" class="avatar-square">
-                                    <% } else { %>
-                                        <div class="avatar-square avatar-placeholder">
-                                            <%= currentUser ? currentUser.username.charAt(0).toUpperCase() : '?' %>
-                                        </div>
-                                        <% } %>
+                                <a href="/profile/<%= currentUser.username %>">
+                                    <% if (currentUser && currentUser.avatar) { %>
+                                        <img src="<%= currentUser.avatar %>" alt="Avatar" class="avatar-square">
+                                        <% } else { %>
+                                            <div class="avatar-square avatar-placeholder">
+                                                <%= currentUser ? currentUser.username.charAt(0).toUpperCase() : '?' %>
+                                            </div>
+                                            <% } %>
+                                </a>
                             </div>
                             <div class="composer-card">
                                 <div class="composer-header-text">What's on your mind?</div>
@@ -356,15 +358,17 @@
                                                         </form>
                                                     </div>
                                                 <% } %>
-                                                <div>
-                                                    <% if (post.author.avatar) { %>
-                                                        <img src="<%= post.author.avatar %>" alt="Avatar"
-                                                            class="avatar-square">
-                                                        <% } else { %>
-                                                            <div class="avatar-square avatar-placeholder">
-                                                                <%= post.author.username.charAt(0).toUpperCase() %>
-                                                            </div>
-                                                            <% } %>
+                                                <div style="flex-shrink:0;">
+                                                    <a href="/profile/<%= post.author.username %>">
+                                                        <% if (post.author.avatar) { %>
+                                                            <img src="<%= post.author.avatar %>" alt="Avatar"
+                                                                class="avatar-square">
+                                                            <% } else { %>
+                                                                <div class="avatar-square avatar-placeholder">
+                                                                    <%= post.author.username.charAt(0).toUpperCase() %>
+                                                                </div>
+                                                                <% } %>
+                                                    </a>
                                                 </div>
                                                 <div class="post-content-area" style="width: 100%;">
                                                     <div class="post-view-mode" id="view-<%= post._id %>">
