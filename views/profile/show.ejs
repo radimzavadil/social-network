@@ -551,6 +551,16 @@
                                             <input type="hidden" name="content" value="poked you!">
                                         </form>
                                         <a href="#" class="action-link" onclick="document.getElementById('poke-form').submit(); return false;">Poke Him!</a>
+
+                                        <% if (typeof isFriend !== 'undefined' && isFriend) { %>
+                                            <span class="action-link disabled" style="color: green; cursor: default;">Friends</span>
+                                        <% } else if (typeof pendingRequest !== 'undefined' && pendingRequest) { %>
+                                            <span class="action-link disabled" style="color: #666; cursor: default;">Request Sent</span>
+                                        <% } else { %>
+                                            <form action="/friends/send/<%= profileUser.username %>" method="POST" id="friend-request-form" style="display:none;">
+                                            </form>
+                                            <a href="#" class="action-link" onclick="document.getElementById('friend-request-form').submit(); return false;">Add to Friends</a>
+                                        <% } %>
                                     <% } %>
                                 </div>
 
