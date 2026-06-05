@@ -344,11 +344,18 @@
                                     <% feedItems.forEach((item, index)=> {
                                         const isLast = index === feedItems.length - 1;
                                         %>
-                                        <% if (item.kind==='post' ) { const post=item.data; %>
+                                        <% if (item.kind==='post' ) {
+                                            const post=item.data;
+                                            const postAuthor = post.author || { username: 'Deleted User', fullName: 'Deleted User', _id: null, avatar: null };
+                                            const currentUserId = (typeof currentUser !== 'undefined' && currentUser) ? currentUser._id.toString() : null;
+                                            const isAuthor = (currentUserId && postAuthor._id) ? postAuthor._id.toString() === currentUserId : false;
+                                            const isAdmin = (typeof currentUser !== 'undefined' && currentUser && currentUser.role === 'admin');
+                                            const canManage = isAuthor || isAdmin;
+                                        %>
                                             <div class="post-card" id="post-<%= post._id %>">
-                                                <% if (currentUser && (post.author._id.toString() === currentUser._id.toString() || currentUser.role === 'admin')) { %>
+                                                <% if (canManage) { %>
                                                     <div class="post-actions">
-                                                        <% if (post.author._id.toString() === currentUser._id.toString()) { %>
+                                                        <% if (isAuthor) { %>
                                                             <img src="/edit.svg" class="action-icon" onclick="toggleEdit('<%= post._id %>')" title="Upravit">
                                                         <% } %>
                                                         <form action="/feed/<%= post._id %>?_method=DELETE" method="POST" onsubmit="return confirm('Opravdu smazat?')">
@@ -359,24 +366,36 @@
                                                     </div>
                                                 <% } %>
                                                 <div style="flex-shrink:0;">
-                                                    <a href="/profile/<%= post.author.username %>">
-                                                        <% if (post.author.avatar) { %>
-                                                            <img src="<%= post.author.avatar %>" alt="Avatar"
+                                                    <% if (post.author) { %>
+                                                        <a href="/profile/<%= post.author.username %>">
+                                                    <% } %>
+                                                        <% if (postAuthor.avatar) { %>
+                                                            <img src="<%= postAuthor.avatar %>" alt="Avatar"
                                                                 class="avatar-square">
                                                             <% } else { %>
                                                                 <div class="avatar-square avatar-placeholder">
-                                                                    <%= post.author.username.charAt(0).toUpperCase() %>
+                                                                    <%= postAuthor.username.charAt(0).toUpperCase() %>
                                                                 </div>
                                                                 <% } %>
-                                                    </a>
+                                                    <% if (post.author) { %>
+                                                        </a>
+                                                    <% } %>
                                                 </div>
                                                 <div class="post-content-area" style="width: 100%;">
                                                     <div class="post-view-mode" id="view-<%= post._id %>">
-                                                        <a href="/profile/<%= post.author.username %>"
-                                                            class="post-author-name">
-                                                            <%= post.author.fullName && post.author.fullName.trim() ?
-                                                                post.author.fullName : post.author.username %>
-                                                        </a>
+                                                        <% if (post.author) { %>
+                                                            <a href="/profile/<%= post.author.username %>"
+                                                                class="post-author-name">
+                                                        <% } else { %>
+                                                            <span class="post-author-name">
+                                                        <% } %>
+                                                            <%= postAuthor.fullName && postAuthor.fullName.trim() ?
+                                                                postAuthor.fullName : postAuthor.username %>
+                                                        <% if (post.author) { %>
+                                                            </a>
+                                                        <% } else { %>
+                                                            </span>
+                                                        <% } %>
                                                         <span class="post-text">
                                                             <%= post.content %>
                                                         </span>
@@ -385,7 +404,7 @@
                                                         <% } %>
                                                     </div>
 
-                                                    <% if (currentUser && post.author._id.toString() === currentUser._id.toString()) { %>
+                                                    <% if (isAuthor) { %>
                                                         <form action="/feed/<%= post._id %>?_method=PUT" method="POST" class="edit-form" id="edit-form-<%= post._id %>" enctype="multipart/form-data">
                                                             <input type="text" name="content" class="edit-input" value="<%= post.content %>" required>
                                                             <div style="display:flex; gap:10px; align-items:center; margin-bottom:5px;">
@@ -405,27 +424,27 @@
                                                 </div>
                                             </div>
 
-                                            <% } else { const ev=item.data; const actor=ev.actor; const meta=ev.meta ||
-                                                {}; let iconSrc='/edit.svg' ; let activityHtml='' ; if
-                                                (ev.type==='birthday_edit' ) { iconSrc='/calendar.svg' ;
-                                                activityHtml=`<strong>${actor.fullName || actor.username}</strong>
-                                                updated their Birthday to <strong>${meta.newValue}</strong>.`;
+                                            <% } else {
+                                                const ev=item.data;
+                                                const actor=ev.actor || { username: 'Deleted User', fullName: 'Deleted User', _id: null, avatar: null };
+                                                const meta=ev.meta || {};
+                                                let iconSrc='/edit.svg' ;
+                                                let activityHtml='' ;
+                                                const actorDisplayName = actor.fullName && actor.fullName.trim() ? actor.fullName : actor.username;
+
+                                                if (ev.type==='birthday_edit' ) {
+                                                    iconSrc='/calendar.svg' ;
+                                                    activityHtml=`<strong>${actorDisplayName}</strong> updated their Birthday to <strong>${meta.newValue}</strong>.`;
                                                 } else if (ev.type === 'wall_post') {
-                                                iconSrc = '/add-wall.svg';
-                                                activityHtml = `<strong>${actor.fullName || actor.username}</strong>
-                                                wrote on <a
-                                                    href="/profile/${meta.wallTargetUsername}">${meta.wallTargetUsername}</a>'s
-                                                wall.`;
+                                                    iconSrc = '/add-wall.svg';
+                                                    activityHtml = `<strong>${actorDisplayName}</strong> wrote on <a href="/profile/${meta.wallTargetUsername}">${meta.wallTargetUsername}</a>'s wall.`;
                                                 } else if (ev.type === 'friend_added') {
-                                                iconSrc = '/add-friend.svg';
-                                                activityHtml = `<strong>${actor.fullName || actor.username}</strong> and
-                                                <a href="/profile/${meta.friendUsername}">${meta.friendUsername}</a> are
-                                                now friends.`;
+                                                    iconSrc = '/add-friend.svg';
+                                                    activityHtml = `<strong>${actorDisplayName}</strong> and <a href="/profile/${meta.friendUsername}">${meta.friendUsername}</a> are now friends.`;
                                                 } else {
-                                                // profile_edit
-                                                const label = FIELD_LABELS[meta.field] || meta.field;
-                                                activityHtml = `<strong>${actor.fullName || actor.username}</strong>
-                                                changed their ${label} to <strong>${meta.newValue}</strong>.`;
+                                                    // profile_edit
+                                                    const label = FIELD_LABELS[meta.field] || meta.field;
+                                                    activityHtml = `<strong>${actorDisplayName}</strong> changed their ${label} to <strong>${meta.newValue}</strong>.`;
                                                 }
                                                 %>
                                                 <div class="activity-card">

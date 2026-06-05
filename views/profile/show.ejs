@@ -966,12 +966,20 @@
 
                                     <% if (wallPosts && wallPosts.length> 0) { %>
                                         <% wallPosts.forEach(function(wp) { %>
+                                            <%
+                                                const wpAuthor = wp.author || { username: 'Deleted User', fullName: 'Deleted User', _id: null, avatar: null };
+                                                const currentUserId = (typeof user !== 'undefined' && user) ? user._id.toString() : null;
+                                                const isAuthor = (currentUserId && wpAuthor._id) ? wpAuthor._id.toString() === currentUserId : false;
+                                                const isProfileOwner = (currentUserId && profileUser) ? profileUser._id.toString() === currentUserId : false;
+                                                const isAdmin = (typeof user !== 'undefined' && user && user.role === 'admin');
+                                                const canManage = isAuthor || isProfileOwner || isAdmin;
+                                            %>
                                             <div class="wall-item"
                                                 style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #e5e5e5;">
 
-                                                <% if (typeof user !== 'undefined' && user && (wp.author._id.toString() === user._id.toString() || profileUser._id.toString() === user._id.toString() || user.role === 'admin')) { %>
+                                                <% if (canManage) { %>
                                                     <div class="wall-actions">
-                                                        <% if (wp.author._id.toString() === user._id.toString()) { %>
+                                                        <% if (isAuthor) { %>
                                                             <img src="/edit.svg" class="action-icon" onclick="toggleEdit('<%= wp._id %>')" title="Upravit">
                                                         <% } %>
                                                         <form action="/profile/wall/<%= wp._id %>?_method=DELETE" method="POST" onsubmit="return confirm('Opravdu smazat?')">
@@ -983,25 +991,37 @@
                                                 <% } %>
 
                                                 <div style="flex-shrink:0;">
-                                                    <a href="/profile/<%= wp.author.username %>">
-                                                        <% if (wp.author.avatar) { %>
-                                                            <img src="<%= wp.author.avatar %>" alt=""
+                                                    <% if (wp.author) { %>
+                                                        <a href="/profile/<%= wp.author.username %>">
+                                                    <% } %>
+                                                        <% if (wpAuthor.avatar) { %>
+                                                            <img src="<%= wpAuthor.avatar %>" alt=""
                                                                 style="width:40px;height:40px;object-fit:cover;border:1px solid #ccc;border-radius:4px;">
                                                             <% } else { %>
                                                                 <div
                                                                     style="width:40px;height:40px;background:#eceff5;border:1px solid #ccc;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#3b5998;font-size:16px;">
-                                                                    <%= wp.author.username.charAt(0).toUpperCase() %>
+                                                                    <%= wpAuthor.username.charAt(0).toUpperCase() %>
                                                                 </div>
                                                                 <% } %>
-                                                    </a>
+                                                    <% if (wp.author) { %>
+                                                        </a>
+                                                    <% } %>
                                                 </div>
                                                 <div style="flex:1;">
                                                     <div id="view-<%= wp._id %>" style="font-size:13px;">
-                                                        <a href="/profile/<%= wp.author.username %>"
-                                                            style="color:#3b5998;text-decoration:none;font-weight:bold;">
-                                                            <%= wp.author.fullName && wp.author.fullName.trim() ?
-                                                                wp.author.fullName : wp.author.username %>
-                                                        </a>
+                                                        <% if (wp.author) { %>
+                                                            <a href="/profile/<%= wp.author.username %>"
+                                                                style="color:#3b5998;text-decoration:none;font-weight:bold;">
+                                                        <% } else { %>
+                                                            <span style="color:#3b5998;font-weight:bold;">
+                                                        <% } %>
+                                                            <%= wpAuthor.fullName && wpAuthor.fullName.trim() ?
+                                                                wpAuthor.fullName : wpAuthor.username %>
+                                                        <% if (wp.author) { %>
+                                                            </a>
+                                                        <% } else { %>
+                                                            </span>
+                                                        <% } %>
                                                         <span style="color:#111;margin-left:4px;">
                                                             <%= wp.content %>
                                                         </span>
@@ -1010,7 +1030,7 @@
                                                         <% } %>
                                                     </div>
 
-                                                    <% if (typeof user !== 'undefined' && user && wp.author._id.toString() === user._id.toString()) { %>
+                                                    <% if (isAuthor) { %>
                                                         <form action="/profile/wall/<%= wp._id %>?_method=PUT" method="POST" class="edit-form" id="edit-form-<%= wp._id %>" enctype="multipart/form-data">
                                                             <input type="text" name="content" class="edit-input" value="<%= wp.content %>" required>
                                                             <div style="display:flex; gap:10px; align-items:center;">

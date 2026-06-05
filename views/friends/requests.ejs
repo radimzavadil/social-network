@@ -164,34 +164,40 @@
                     You have <strong><%= requests.length %></strong> pending friend request<%= requests.length !== 1 ? 's' : '' %>:
                 </p>
 
-                <% requests.forEach(function(req) { %>
+                <% requests.forEach(function(r) { %>
+                <% const sender = r.sender || { username: 'Deleted User', fullName: 'Deleted User', _id: null, avatar: null }; %>
                 <div class="request-card">
-                    <% if (req.sender.avatar) { %>
-                        <img src="<%= req.sender.avatar %>" alt="<%= req.sender.username %>" class="req-avatar">
+                    <% if (sender.avatar) { %>
+                        <img src="<%= sender.avatar %>" alt="<%= sender.username %>" class="req-avatar">
                     <% } else { %>
-                        <div class="req-avatar-ph"><%= req.sender.username.charAt(0).toUpperCase() %></div>
+                        <div class="req-avatar-ph"><%= sender.username.charAt(0).toUpperCase() %></div>
                     <% } %>
 
                     <div class="req-info">
-                        <a href="/profile/<%= req.sender.username %>" class="req-name">
-                            <%= req.sender.fullName || req.sender.username %>
-                        </a>
-                        <% if (req.sender.fullName) { %>
-                        <div class="req-sub">@<%= req.sender.username %></div>
+                        <% if (r.sender) { %>
+                            <a href="/profile/<%= sender.username %>" class="req-name">
+                                <%= sender.fullName || sender.username %>
+                            </a>
+                        <% } else { %>
+                            <span class="req-name"><%= sender.fullName || sender.username %></span>
                         <% } %>
-                        <% if (req.sender.college) { %>
-                        <div class="req-sub"><%= req.sender.college %></div>
+
+                        <% if (r.sender && sender.fullName) { %>
+                            <div class="req-sub">@<%= sender.username %></div>
+                        <% } %>
+                        <% if (sender.college) { %>
+                            <div class="req-sub"><%= sender.college %></div>
                         <% } %>
                         <div class="req-sub" style="margin-top:4px; color:#999;">
-                            Sent <%= new Date(req.createdAt).toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' }) %>
+                            Sent <%= new Date(r.createdAt).toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' }) %>
                         </div>
                     </div>
 
                     <div class="req-actions">
-                        <form action="/friends/accept/<%= req._id %>" method="POST">
+                        <form action="/friends/accept/<%= r._id %>" method="POST">
                             <button type="submit" class="btn-accept">Accept</button>
                         </form>
-                        <form action="/friends/deny/<%= req._id %>" method="POST">
+                        <form action="/friends/deny/<%= r._id %>" method="POST">
                             <button type="submit" class="btn-deny">Deny</button>
                         </form>
                     </div>
