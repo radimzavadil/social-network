@@ -99,6 +99,9 @@ exports.getProfileByUsername = async (req, res) => {
       myFriendIds.has(f._id.toString()),
     ).length;
 
+    const isOwnProfile =
+      profileUser._id.toString() === currentUser._id.toString();
+
     res.render("profile/show", {
       profileUser,
       user: currentUser,
@@ -107,7 +110,7 @@ exports.getProfileByUsername = async (req, res) => {
       isFriend,
       pendingRequest,
       dbError: false,
-      activePage: "profile",
+      activePage: isOwnProfile ? "profile" : "other",
     });
   } catch (error) {
     console.error(error);
@@ -300,7 +303,7 @@ exports.searchUsers = async (req, res) => {
       users,
       query,
       user: req.session.user,
-      activePage: "profile",
+      activePage: "search",
     });
   } catch (error) {
     console.error(error);

@@ -1,57 +1,223 @@
 <!DOCTYPE html>
-<html lang="cs">
-
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Správa uživatelů – thefacebook</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Lucida+Grande:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/style.css">
+    <meta charset="UTF-8">
+    <title>Admin: User Management – thefacebook</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #dde2ea;
+            font-family: 'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, sans-serif;
+            font-size: 13px;
+            color: #000;
+        }
+
+        .main-container {
+            display: flex;
+            gap: 25px;
+            max-width: 1150px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .sidebar-left { width: 200px; flex-shrink: 0; }
+
+        .nav-links-box {
+            border: 1px dashed #555555;
+            padding: 12px;
+            background: #fff;
+        }
+
+        .nav-links-box ul { list-style: none; }
+        .nav-links-box ul li { margin-bottom: 8px; }
+        .nav-links-box ul li a { color: #5471b0; text-decoration: none; font-weight: 500; }
+        .nav-links-box ul li a:hover { text-decoration: underline; }
+
+        .profile-container {
+            flex: 1;
+            border: 2px solid #3b5998;
+            background-color: #fff;
+        }
+
+        .profile-topbar {
+            background: #4c66a4;
+            padding: 8px 15px;
+            border-bottom: 1px solid #3b5998;
+            color: #fff;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .content-body { padding: 20px; }
+
+        .search-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 0;
+            border-bottom: 1px dotted #6d84b4;
+        }
+
+        .search-card:last-child { border-bottom: none; }
+
+        .res-avatar {
+            width: 75px;
+            height: 75px;
+            object-fit: cover;
+            border: 1px solid #bcbcbc;
+            flex-shrink: 0;
+        }
+
+        .res-avatar-ph {
+            width: 75px;
+            height: 75px;
+            background: #e0e4f0;
+            border: 1px solid #bcbcbc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #3b5998;
+            flex-shrink: 0;
+        }
+
+        .res-info { flex: 1; }
+
+        .res-name {
+            font-weight: bold;
+            font-size: 15px;
+            color: #3b5998;
+            text-decoration: none;
+        }
+
+        .res-name:hover { text-decoration: underline; }
+
+        .res-sub { color: #555; font-size: 12px; margin-top: 3px; }
+
+        .admin-actions {
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .role-form {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .role-select {
+            font-size: 11px;
+            padding: 2px;
+        }
+
+        .btn-small {
+            font-size: 11px;
+            padding: 2px 8px;
+            cursor: pointer;
+            background: #f0f0f0;
+            border: 1px solid #999;
+        }
+
+        .btn-small:hover {
+            background: #e0e0e0;
+        }
+
+        .alert-error {
+            background: #ffebe8;
+            border: 1px solid #dd3c10;
+            padding: 10px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .empty-msg {
+            text-align: center;
+            color: #777;
+            padding: 40px 0;
+            font-size: 14px;
+            font-style: italic;
+        }
+    </style>
 </head>
-
 <body>
-  <%- include('../partials/nav', {}) %>
 
-    <div class="page-wrapper">
+<%- include('../partials/nav') %>
 
-      <% if (locals.dbError) { %>
-        <div class="alert-error">
-          <strong>⚠️ Databáze není připojena:</strong> Uživatele nelze spravovat.
+<div class="main-container">
+
+    <div class="sidebar-left">
+        <div class="nav-links-box">
+            <ul>
+                <li><a href="/profile">&laquo; My Profile</a></li>
+                <li><a href="/feed">Feed</a></li>
+            </ul>
         </div>
-        <% } %>
-
-          <div class="edit-container">
-            <div class="edit-header-bar">Správa uživatelů</div>
-            <div class="edit-body">
-
-              <% if (users.length===0) { %>
-                <p style="color: var(--fb-text-light); font-style: italic;">Žádní uživatelé.</p>
-                <% } %>
-
-                  <% users.forEach(oneUser=> { %>
-                    <div
-                      style="padding: 10px 0; border-bottom: 1px dotted var(--fb-border); display:flex; align-items:center; gap:16px;">
-                      <div style="flex:1;">
-                        <strong>
-                          <%= oneUser.username %>
-                        </strong>
-                        <span style="color:var(--fb-text-light); font-size:12px;"> — role: <%= oneUser.role %></span>
-                      </div>
-                      <form action="/admin/users/<%= oneUser._id %>/role" method="POST"
-                        style="display:flex; gap:6px; align-items:center;">
-                        <select name="role" class="form-input" style="width:auto; padding: 4px 8px;">
-                          <option value="user" <%=oneUser.role==="user" ? "selected" : "" %>>user</option>
-                          <option value="admin" <%=oneUser.role==="admin" ? "selected" : "" %>>admin</option>
-                        </select>
-                        <button type="submit" class="save-btn" style="padding: 4px 12px;">Změnit</button>
-                      </form>
-                    </div>
-                    <% }) %>
-
-            </div>
-          </div>
     </div>
-</body>
 
+    <div class="profile-container">
+        <div class="profile-topbar">Admin: All User Profiles</div>
+
+        <div class="content-body">
+            <% if (locals.dbError) { %>
+                <div class="alert-error">
+                    <strong>⚠️ Database Error:</strong> Could not retrieve users.
+                </div>
+            <% } %>
+
+            <% if (users.length === 0) { %>
+                <div class="empty-msg">No users registered in the system.</div>
+            <% } else { %>
+                <p style="margin-bottom: 16px; color:#555;">
+                    Total Users: <strong><%= users.length %></strong>
+                </p>
+
+                <% users.forEach(function(u) { %>
+                <div class="search-card">
+                    <a href="/profile/<%= u.username %>">
+                        <% if (u.avatar) { %>
+                            <img src="<%= u.avatar %>" alt="<%= u.username %>" class="res-avatar">
+                        <% } else { %>
+                            <div class="res-avatar-ph"><%= u.username.charAt(0).toUpperCase() %></div>
+                        <% } %>
+                    </a>
+
+                    <div class="res-info">
+                        <a href="/profile/<%= u.username %>" class="res-name">
+                            <%= u.fullName || u.username %>
+                        </a>
+                        <div class="res-sub">Username: @<%= u.username %> | Role: <strong><%= u.role %></strong></div>
+                        <% if (u.college) { %>
+                        <div class="res-sub">School: <%= u.college %></div>
+                        <% } %>
+
+                        <div class="admin-actions">
+                            <form action="/admin/users/<%= u._id %>/role" method="POST" class="role-form">
+                                <label style="font-size: 11px;">Change Role:</label>
+                                <select name="role" class="role-select">
+                                    <option value="user" <%= u._id.equals(locals.user.id) ? 'disabled' : '' %> <%= u.role === 'user' ? 'selected' : '' %>>User</option>
+                                    <option value="admin" <%= u._id.equals(locals.user.id) ? 'disabled' : '' %> <%= u.role === 'admin' ? 'selected' : '' %>>Admin</option>
+                                </select>
+                                <button type="submit" class="btn-small" <%= u._id.equals(locals.user.id) ? 'disabled' : '' %>>Update</button>
+                            </form>
+
+                            <% if (!u._id.equals(locals.user.id)) { %>
+                                <form action="/admin/users/<%= u._id %>?_method=DELETE" method="POST" onsubmit="return confirm('Are you sure you want to delete this user? This action cannot be undone.');">
+                                    <button type="submit" class="btn-small" style="color: #a00; border-color: #a00;">Delete</button>
+                                </form>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+                <% }) %>
+            <% } %>
+
+        </div>
+    </div>
+
+</div>
+</body>
 </html>

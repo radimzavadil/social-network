@@ -9,6 +9,9 @@
       <% if (locals.user) { %>
         <a href="/feed" class="<%= locals.activePage === 'feed' ? 'active' : '' %>">feed</a>
         <a href="/profile" class="<%= locals.activePage === 'profile' ? 'active' : '' %>">my profile</a>
+        <% if (locals.user.role === 'admin') { %>
+          <a href="/admin/users" class="<%= locals.activePage === 'admin' ? 'active' : '' %>">admin</a>
+        <% } %>
         <a href="/logout">log out</a>
         <% } else { %>
           <a href="/login" class="<%= locals.activePage === 'login' ? 'active' : '' %>">login</a>
