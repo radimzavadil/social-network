@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const User = require("../models/User");
 const WallPost = require("../models/Wallpost");
 const ActivityEvent = require("../models/ActivityEvent");
+const FriendRequest = require("../models/FriendRequest");
 
 const isConnected = () => mongoose.connection.readyState === 1;
 
@@ -25,6 +26,8 @@ exports.getProfile = async (req, res) => {
       user: null,
       wallPosts: [],
       mutualCount: 0,
+      isFriend: false,
+      pendingRequest: null,
       dbError: true,
     });
   }
@@ -42,6 +45,8 @@ exports.getProfile = async (req, res) => {
       user,
       wallPosts,
       mutualCount: 0,
+      isFriend: false,
+      pendingRequest: null,
       dbError: false,
       activePage: "profile",
     });
@@ -58,6 +63,8 @@ exports.getProfileByUsername = async (req, res) => {
       user: null,
       wallPosts: [],
       mutualCount: 0,
+      isFriend: false,
+      pendingRequest: null,
       dbError: true,
     });
   }
@@ -77,14 +84,28 @@ exports.getProfileByUsername = async (req, res) => {
     const myFriendIds = new Set(
       (currentUser.friends || []).map((f) => f._id.toString()),
     );
+    const isFriend = myFriendIds.has(profileUser._id.toString());
+
+    // Check for pending friend request
+    const pendingRequest = await FriendRequest.findOne({
+      $or: [
+        { sender: currentUser._id, recipient: profileUser._id },
+        { sender: profileUser._id, recipient: currentUser._id },
+      ],
+      status: "pending",
+    });
+
     const mutualCount = (profileUser.friends || []).filter((f) =>
       myFriendIds.has(f._id.toString()),
     ).length;
+
     res.render("profile/show", {
       profileUser,
       user: currentUser,
       wallPosts,
       mutualCount,
+      isFriend,
+      pendingRequest,
       dbError: false,
       activePage: "profile",
     });
